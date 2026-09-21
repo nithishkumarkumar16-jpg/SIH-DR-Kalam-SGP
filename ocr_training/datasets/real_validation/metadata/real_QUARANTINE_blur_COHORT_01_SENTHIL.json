@@ -1,0 +1,22 @@
+{
+  "id": "REAL_VAL_0061",
+  "image_filename": "real_QUARANTINE_blur_COHORT_01_SENTHIL.jpg",
+  "image_path": "datasets/real_validation/images/real_QUARANTINE_blur_COHORT_01_SENTHIL.jpg",
+  "cohort_id": "COHORT_01_SENTHIL",
+  "document_type": "community_certificate",
+  "degradation": "severe_blur_quarantine",
+  "ground_truth": {
+    "studentName": "SENTHIL KUMAR K",
+    "dateOfBirth": "14-05-2005",
+    "parentName": "KRISHNAMOORTHY M",
+    "certificateNumber": "TN-QUARANTINE-1",
+    "community": "Vanniyar",
+    "category": "MBC"
+  },
+  "privacy": {
+    "synthetic_authorized": true,
+    "contains_real_pii": false
+  },
+  "expected_cross_status": "CONSISTENT",
+  "is_quarantine_sample": true
+}

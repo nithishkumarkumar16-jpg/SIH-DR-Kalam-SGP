@@ -1,0 +1,30 @@
+{
+  "id": "REAL_VAL_0023",
+  "image_filename": "real_COHORT_07_NITHISH_NOISE_10th_marksheet_rotated_scan.jpg",
+  "image_path": "datasets/real_validation/images/real_COHORT_07_NITHISH_NOISE_10th_marksheet_rotated_scan.jpg",
+  "cohort_id": "COHORT_07_NITHISH_NOISE",
+  "document_type": "10th_marksheet",
+  "degradation": "rotated_scan",
+  "ground_truth": {
+    "studentName": "NITHISH KUMAR M",
+    "dateOfBirth": "26-09-2005",
+    "parentName": "MURUGAN S",
+    "community": null,
+    "category": null,
+    "annualIncome": null,
+    "certificateNumber": "TN-SSLC-070188",
+    "registrationNumber": "74070001",
+    "schoolName": "Government Boys Higher Secondary School, Dindigul",
+    "board": "Tamil Nadu State Board (SSLC)",
+    "passingYear": "2021",
+    "issueDate": "15-06-2026",
+    "issuingAuthority": "Department of Government Examinations"
+  },
+  "privacy": {
+    "synthetic_authorized": true,
+    "aadhaar_redacted": "XXXX-XXXX-1234",
+    "bank_redacted": "XXXX5678",
+    "contains_real_pii": false
+  },
+  "expected_cross_status": "CONSISTENT"
+}

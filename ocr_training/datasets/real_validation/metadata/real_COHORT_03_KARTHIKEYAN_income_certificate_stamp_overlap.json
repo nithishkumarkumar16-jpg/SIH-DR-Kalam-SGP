@@ -1,0 +1,30 @@
+{
+  "id": "REAL_VAL_0012",
+  "image_filename": "real_COHORT_03_KARTHIKEYAN_income_certificate_stamp_overlap.jpg",
+  "image_path": "datasets/real_validation/images/real_COHORT_03_KARTHIKEYAN_income_certificate_stamp_overlap.jpg",
+  "cohort_id": "COHORT_03_KARTHIKEYAN",
+  "document_type": "income_certificate",
+  "degradation": "stamp_overlap",
+  "ground_truth": {
+    "studentName": "KARTHIKEYAN M",
+    "dateOfBirth": "10-11-2005",
+    "parentName": "MURUGESAN P",
+    "community": null,
+    "category": null,
+    "annualIncome": "72000",
+    "certificateNumber": "TN-INC2026-030488",
+    "registrationNumber": null,
+    "schoolName": null,
+    "board": null,
+    "passingYear": null,
+    "issueDate": "15-06-2026",
+    "issuingAuthority": "Tahsildar"
+  },
+  "privacy": {
+    "synthetic_authorized": true,
+    "aadhaar_redacted": "XXXX-XXXX-1234",
+    "bank_redacted": "XXXX5678",
+    "contains_real_pii": false
+  },
+  "expected_cross_status": "MINOR_DIFFERENCE"
+}

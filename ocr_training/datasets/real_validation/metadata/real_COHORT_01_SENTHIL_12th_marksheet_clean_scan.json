@@ -1,0 +1,33 @@
+{
+  "id": "REAL_VAL_0003",
+  "image_filename": "real_COHORT_01_SENTHIL_12th_marksheet_clean_scan.jpg",
+  "image_path": "datasets/real_validation/images/real_COHORT_01_SENTHIL_12th_marksheet_clean_scan.jpg",
+  "cohort_id": "COHORT_01_SENTHIL",
+  "document_type": "12th_marksheet",
+  "degradation": "clean_scan",
+  "ground_truth": {
+    "studentName": "SENTHIL KUMAR K",
+    "dateOfBirth": "14-05-2005",
+    "parentName": "KRISHNAMOORTHY M",
+    "community": null,
+    "category": null,
+    "annualIncome": null,
+    "certificateNumber": "TN-HSC-010288",
+    "registrationNumber": "74010002",
+    "schoolName": "Government Higher Secondary School, Madurai",
+    "board": "Tamil Nadu Higher Secondary (HSC)",
+    "passingYear": "2023",
+    "marks": "515/600",
+    "percentage": "85.83%",
+    "issueDate": "15-06-2026",
+    "validity": null,
+    "issuingAuthority": "Department of Government Examinations"
+  },
+  "privacy": {
+    "synthetic_authorized": true,
+    "aadhaar_redacted": "XXXX-XXXX-1234",
+    "bank_redacted": "XXXX5678",
+    "contains_real_pii": false
+  },
+  "expected_cross_status": "CONSISTENT"
+}

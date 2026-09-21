@@ -1,0 +1,33 @@
+{
+  "id": "REAL_VAL_0056",
+  "image_filename": "real_COHORT_08_DIVYA_TITLE_community_certificate_faint_printing.jpg",
+  "image_path": "datasets/real_validation/images/real_COHORT_08_DIVYA_TITLE_community_certificate_faint_printing.jpg",
+  "cohort_id": "COHORT_08_DIVYA_TITLE",
+  "document_type": "community_certificate",
+  "degradation": "faint_printing",
+  "ground_truth": {
+    "studentName": "DIVYA BHARATHI R",
+    "dateOfBirth": "12-12-2006",
+    "parentName": "RAJENDRAN C",
+    "community": "Maravar",
+    "category": "MBC",
+    "annualIncome": null,
+    "certificateNumber": "TN-52024-080388",
+    "registrationNumber": null,
+    "schoolName": null,
+    "board": null,
+    "passingYear": null,
+    "marks": null,
+    "percentage": null,
+    "issueDate": "15-06-2026",
+    "validity": null,
+    "issuingAuthority": "Tahsildar"
+  },
+  "privacy": {
+    "synthetic_authorized": true,
+    "aadhaar_redacted": "XXXX-XXXX-1234",
+    "bank_redacted": "XXXX5678",
+    "contains_real_pii": false
+  },
+  "expected_cross_status": "CONSISTENT"
+}

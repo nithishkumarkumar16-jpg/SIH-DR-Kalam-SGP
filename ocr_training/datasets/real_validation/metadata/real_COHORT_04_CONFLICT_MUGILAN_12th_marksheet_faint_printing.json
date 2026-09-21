@@ -1,0 +1,30 @@
+{
+  "id": "REAL_VAL_0014",
+  "image_filename": "real_COHORT_04_CONFLICT_MUGILAN_12th_marksheet_faint_printing.jpg",
+  "image_path": "datasets/real_validation/images/real_COHORT_04_CONFLICT_MUGILAN_12th_marksheet_faint_printing.jpg",
+  "cohort_id": "COHORT_04_CONFLICT_MUGILAN",
+  "document_type": "12th_marksheet",
+  "degradation": "faint_printing",
+  "ground_truth": {
+    "studentName": "MUGILAN R",
+    "dateOfBirth": "18-03-2005",
+    "parentName": "RAMESH BABU K",
+    "community": null,
+    "category": null,
+    "annualIncome": null,
+    "certificateNumber": "TN-HSC-040288",
+    "registrationNumber": "74040002",
+    "schoolName": "Government Model Higher Secondary School, Tiruchirappalli",
+    "board": "Tamil Nadu Higher Secondary (HSC)",
+    "passingYear": "2023",
+    "issueDate": "15-06-2026",
+    "issuingAuthority": "Department of Government Examinations"
+  },
+  "privacy": {
+    "synthetic_authorized": true,
+    "aadhaar_redacted": "XXXX-XXXX-1234",
+    "bank_redacted": "XXXX5678",
+    "contains_real_pii": false
+  },
+  "expected_cross_status": "SIGNIFICANT CONFLICT"
+}

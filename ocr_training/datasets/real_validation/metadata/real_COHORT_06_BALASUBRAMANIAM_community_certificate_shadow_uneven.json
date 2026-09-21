@@ -1,0 +1,33 @@
+{
+  "id": "REAL_VAL_0040",
+  "image_filename": "real_COHORT_06_BALASUBRAMANIAM_community_certificate_shadow_uneven.jpg",
+  "image_path": "datasets/real_validation/images/real_COHORT_06_BALASUBRAMANIAM_community_certificate_shadow_uneven.jpg",
+  "cohort_id": "COHORT_06_BALASUBRAMANIAM",
+  "document_type": "community_certificate",
+  "degradation": "shadow_uneven",
+  "ground_truth": {
+    "studentName": "BALASUBRAMANIAM SIVASANKARANARAYANAN",
+    "dateOfBirth": "30-07-2005",
+    "parentName": "SIVASANKARANARAYANAN T",
+    "community": "Brahmin",
+    "category": "General",
+    "annualIncome": null,
+    "certificateNumber": "TN-52024-060388",
+    "registrationNumber": null,
+    "schoolName": null,
+    "board": null,
+    "passingYear": null,
+    "marks": null,
+    "percentage": null,
+    "issueDate": "15-06-2026",
+    "validity": null,
+    "issuingAuthority": "Tahsildar"
+  },
+  "privacy": {
+    "synthetic_authorized": true,
+    "aadhaar_redacted": "XXXX-XXXX-1234",
+    "bank_redacted": "XXXX5678",
+    "contains_real_pii": false
+  },
+  "expected_cross_status": "CONSISTENT"
+}

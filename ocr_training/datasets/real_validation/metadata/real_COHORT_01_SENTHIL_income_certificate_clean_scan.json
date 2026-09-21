@@ -1,0 +1,33 @@
+{
+  "id": "REAL_VAL_0007",
+  "image_filename": "real_COHORT_01_SENTHIL_income_certificate_clean_scan.jpg",
+  "image_path": "datasets/real_validation/images/real_COHORT_01_SENTHIL_income_certificate_clean_scan.jpg",
+  "cohort_id": "COHORT_01_SENTHIL",
+  "document_type": "income_certificate",
+  "degradation": "clean_scan",
+  "ground_truth": {
+    "studentName": "SENTHIL KUMAR K",
+    "dateOfBirth": "14-05-2005",
+    "parentName": "KRISHNAMOORTHY M",
+    "community": null,
+    "category": null,
+    "annualIncome": "96000",
+    "certificateNumber": "TN-INC2026-010488",
+    "registrationNumber": null,
+    "schoolName": null,
+    "board": null,
+    "passingYear": null,
+    "marks": null,
+    "percentage": null,
+    "issueDate": "15-06-2026",
+    "validity": "ONE YEAR",
+    "issuingAuthority": "Tahsildar"
+  },
+  "privacy": {
+    "synthetic_authorized": true,
+    "aadhaar_redacted": "XXXX-XXXX-1234",
+    "bank_redacted": "XXXX5678",
+    "contains_real_pii": false
+  },
+  "expected_cross_status": "CONSISTENT"
+}

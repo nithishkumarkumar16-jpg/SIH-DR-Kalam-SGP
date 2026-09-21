@@ -1,0 +1,46 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env
+.env.*
+!.env.example
+
+# backend runtime files
+/scholarship-backend/.env
+/scholarship-backend/uploads/
+
+# Local, generated OCR training images and local model artifacts
+/ocr_training/datasets/**/*.jpg
+/ocr_training/datasets/**/*.png
+/ocr_training/datasets/metadata/**/*.json
+/ocr_training/models/**/*.onnx
+/ocr_training/models/**/*.pt
+/ocr_training/models/**/*.bin
+/ocr_training/checkpoints/**
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+node_modules/
+.env
+.env.*
+!.env.example
+build/
+dist/
+*.log

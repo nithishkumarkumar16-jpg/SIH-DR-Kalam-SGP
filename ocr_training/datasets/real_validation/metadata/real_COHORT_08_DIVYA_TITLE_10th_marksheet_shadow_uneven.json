@@ -1,0 +1,33 @@
+{
+  "id": "REAL_VAL_0052",
+  "image_filename": "real_COHORT_08_DIVYA_TITLE_10th_marksheet_shadow_uneven.jpg",
+  "image_path": "datasets/real_validation/images/real_COHORT_08_DIVYA_TITLE_10th_marksheet_shadow_uneven.jpg",
+  "cohort_id": "COHORT_08_DIVYA_TITLE",
+  "document_type": "10th_marksheet",
+  "degradation": "shadow_uneven",
+  "ground_truth": {
+    "studentName": "Divya Bharathi R",
+    "dateOfBirth": "12-12-2006",
+    "parentName": "RAJENDRAN C",
+    "community": null,
+    "category": null,
+    "annualIncome": null,
+    "certificateNumber": "TN-SSLC-080188",
+    "registrationNumber": "74080001",
+    "schoolName": "Kamarajar Girls Higher Secondary School, Virudhunagar",
+    "board": "Tamil Nadu State Board (SSLC)",
+    "passingYear": "2021",
+    "marks": "445/500",
+    "percentage": "89.0%",
+    "issueDate": "15-06-2026",
+    "validity": null,
+    "issuingAuthority": "Department of Government Examinations"
+  },
+  "privacy": {
+    "synthetic_authorized": true,
+    "aadhaar_redacted": "XXXX-XXXX-1234",
+    "bank_redacted": "XXXX5678",
+    "contains_real_pii": false
+  },
+  "expected_cross_status": "CONSISTENT"
+}

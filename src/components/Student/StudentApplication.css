@@ -1,0 +1,282 @@
+.student-app-page {
+  min-height: 100vh;
+  background: #f8fafc;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  color: #0f172a;
+}
+
+.app-header {
+  background: #02065c;
+  color: #ffffff;
+  padding: 16px 24px;
+}
+
+.app-header-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-header .brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.app-header .brand img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.app-header .brand h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.app-header .brand p {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.app-main-container {
+  max-width: 1050px;
+  margin: 28px auto;
+  padding: 0 16px 60px;
+}
+
+.app-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.app-hero h1 {
+  margin: 0 0 4px 0;
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.app-hero p {
+  margin: 0;
+  font-size: 13.5px;
+  color: #64748b;
+}
+
+.btn-secondary {
+  background: #ffffff;
+  color: #334155;
+  border: 1.5px solid #cbd5e1;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #f1f5f9;
+}
+
+.create-app-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 22px 26px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-bottom: 28px;
+}
+
+.create-app-card h3 {
+  margin: 0 0 6px 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.create-app-card p {
+  margin: 0 0 14px 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.create-form {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.scheme-select {
+  flex: 1;
+  min-width: 280px;
+  padding: 11px 14px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 13.5px;
+  background: #fff;
+}
+
+.start-app-btn {
+  background: #02065c;
+  color: #ffffff;
+  border: none;
+  padding: 11px 22px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.start-app-btn:hover {
+  background: #1e1b4b;
+}
+
+.apps-list-section h2 {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0 0 16px 0;
+}
+
+.apps-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.app-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 22px 24px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.app-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.app-id-pill {
+  font-size: 11px;
+  font-weight: 800;
+  color: #2563eb;
+  background: #eff6ff;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.scheme-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.status-draft { background: #f1f5f9; color: #475569; }
+.status-submitted { background: #eff6ff; color: #1d4ed8; }
+.status-college_review { background: #fef3c7; color: #b45309; }
+.status-correction_required { background: #fee2e2; color: #b91c1c; }
+.status-resubmitted { background: #e0e7ff; color: #4338ca; }
+.status-ministry_scrutiny { background: #fae8ff; color: #86198f; }
+.status-selected { background: #dcfce7; color: #15803d; }
+.status-paid { background: #d1fae5; color: #065f46; }
+
+.app-meta-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  background: #f8fafc;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.meta-lbl {
+  display: block;
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.meta-val {
+  font-size: 12.5px;
+  color: #1e293b;
+}
+
+.doc-pill {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.doc-verified, .doc-eligible { background: #dcfce7; color: #166534; }
+.doc-flagged, .doc-not_eligible { background: #fee2e2; color: #991b1b; }
+.doc-pending, .doc-needs_review { background: #fef3c7; color: #92400e; }
+
+.next-action-callout {
+  background: #fffbeb;
+  border-left: 4px solid #f59e0b;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 12.5px;
+  color: #92400e;
+  margin-bottom: 16px;
+}
+
+.app-actions-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.app-actions-bar button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+}
+
+.btn-track { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1 !important; }
+.btn-verify { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe !important; }
+.btn-deficiency { background: #fee2e2; color: #b91c1c; font-weight: 800; }
+.btn-submit { background: #059669; color: #ffffff; }
+
+.empty-apps-box {
+  background: #ffffff;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  color: #64748b;
+}

@@ -1,0 +1,33 @@
+{
+  "id": "REAL_VAL_0016",
+  "image_filename": "real_COHORT_02_PRIYADHARSHINI_income_certificate_stamp_overlap.jpg",
+  "image_path": "datasets/real_validation/images/real_COHORT_02_PRIYADHARSHINI_income_certificate_stamp_overlap.jpg",
+  "cohort_id": "COHORT_02_PRIYADHARSHINI",
+  "document_type": "income_certificate",
+  "degradation": "stamp_overlap",
+  "ground_truth": {
+    "studentName": "PRIYADHARSHINI S",
+    "dateOfBirth": "22-08-2006",
+    "parentName": "SUNDARAMURTHY V",
+    "community": null,
+    "category": null,
+    "annualIncome": "140000",
+    "certificateNumber": "TN-INC2026-020488",
+    "registrationNumber": null,
+    "schoolName": null,
+    "board": null,
+    "passingYear": null,
+    "marks": null,
+    "percentage": null,
+    "issueDate": "15-06-2026",
+    "validity": "ONE YEAR",
+    "issuingAuthority": "Tahsildar"
+  },
+  "privacy": {
+    "synthetic_authorized": true,
+    "aadhaar_redacted": "XXXX-XXXX-1234",
+    "bank_redacted": "XXXX5678",
+    "contains_real_pii": false
+  },
+  "expected_cross_status": "CONSISTENT"
+}

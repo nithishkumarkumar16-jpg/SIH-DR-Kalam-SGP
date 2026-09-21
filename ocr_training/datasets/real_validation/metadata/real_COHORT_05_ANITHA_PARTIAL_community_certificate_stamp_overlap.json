@@ -1,0 +1,30 @@
+{
+  "id": "REAL_VAL_0018",
+  "image_filename": "real_COHORT_05_ANITHA_PARTIAL_community_certificate_stamp_overlap.jpg",
+  "image_path": "datasets/real_validation/images/real_COHORT_05_ANITHA_PARTIAL_community_certificate_stamp_overlap.jpg",
+  "cohort_id": "COHORT_05_ANITHA_PARTIAL",
+  "document_type": "community_certificate",
+  "degradation": "stamp_overlap",
+  "ground_truth": {
+    "studentName": "ANITHA G",
+    "dateOfBirth": "05-01-2006",
+    "parentName": "GUNASEKARAN N",
+    "community": "Nadar",
+    "category": "BC",
+    "annualIncome": null,
+    "certificateNumber": "TN-52024-050288",
+    "registrationNumber": null,
+    "schoolName": null,
+    "board": null,
+    "passingYear": null,
+    "issueDate": "15-06-2026",
+    "issuingAuthority": "Tahsildar"
+  },
+  "privacy": {
+    "synthetic_authorized": true,
+    "aadhaar_redacted": "XXXX-XXXX-1234",
+    "bank_redacted": "XXXX5678",
+    "contains_real_pii": false
+  },
+  "expected_cross_status": "INSUFFICIENT DATA"
+}

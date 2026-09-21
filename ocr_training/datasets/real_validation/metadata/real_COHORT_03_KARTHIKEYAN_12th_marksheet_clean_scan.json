@@ -1,0 +1,33 @@
+{
+  "id": "REAL_VAL_0019",
+  "image_filename": "real_COHORT_03_KARTHIKEYAN_12th_marksheet_clean_scan.jpg",
+  "image_path": "datasets/real_validation/images/real_COHORT_03_KARTHIKEYAN_12th_marksheet_clean_scan.jpg",
+  "cohort_id": "COHORT_03_KARTHIKEYAN",
+  "document_type": "12th_marksheet",
+  "degradation": "clean_scan",
+  "ground_truth": {
+    "studentName": "KARTHIKAYAN M",
+    "dateOfBirth": "10-11-2005",
+    "parentName": "MURUGESAN P",
+    "community": null,
+    "category": null,
+    "annualIncome": null,
+    "certificateNumber": "TN-HSC-030288",
+    "registrationNumber": "74030002",
+    "schoolName": "Municipal Boys Higher Secondary School, Salem",
+    "board": "Tamil Nadu Higher Secondary (HSC)",
+    "passingYear": "2023",
+    "marks": "515/600",
+    "percentage": "85.83%",
+    "issueDate": "15-06-2026",
+    "validity": null,
+    "issuingAuthority": "Department of Government Examinations"
+  },
+  "privacy": {
+    "synthetic_authorized": true,
+    "aadhaar_redacted": "XXXX-XXXX-1234",
+    "bank_redacted": "XXXX5678",
+    "contains_real_pii": false
+  },
+  "expected_cross_status": "MINOR_DIFFERENCE"
+}

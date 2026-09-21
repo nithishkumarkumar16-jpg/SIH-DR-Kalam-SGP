@@ -1,0 +1,33 @@
+{
+  "id": "REAL_VAL_0021",
+  "image_filename": "real_COHORT_03_KARTHIKEYAN_community_certificate_clean_scan.jpg",
+  "image_path": "datasets/real_validation/images/real_COHORT_03_KARTHIKEYAN_community_certificate_clean_scan.jpg",
+  "cohort_id": "COHORT_03_KARTHIKEYAN",
+  "document_type": "community_certificate",
+  "degradation": "clean_scan",
+  "ground_truth": {
+    "studentName": "KARTHIKEYAN M",
+    "dateOfBirth": "10-11-2005",
+    "parentName": "MURUGESAN P",
+    "community": "Mutharaiyar",
+    "category": "MBC",
+    "annualIncome": null,
+    "certificateNumber": "TN-52024-030388",
+    "registrationNumber": null,
+    "schoolName": null,
+    "board": null,
+    "passingYear": null,
+    "marks": null,
+    "percentage": null,
+    "issueDate": "15-06-2026",
+    "validity": null,
+    "issuingAuthority": "Tahsildar"
+  },
+  "privacy": {
+    "synthetic_authorized": true,
+    "aadhaar_redacted": "XXXX-XXXX-1234",
+    "bank_redacted": "XXXX5678",
+    "contains_real_pii": false
+  },
+  "expected_cross_status": "MINOR_DIFFERENCE"
+}

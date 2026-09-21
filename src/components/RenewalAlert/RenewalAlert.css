@@ -1,0 +1,474 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body { font-family: "Segoe UI", sans-serif; background: #f1f5f9; }
+
+.renewal-page {
+  min-height: 100vh;
+  background: #f1f5f9;
+}
+
+.renewal-header {
+  position: sticky;
+  top: 0;
+  z-index: 300;
+  overflow: visible;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 8px 40px;
+  background: #020652;
+  color: white;
+  box-shadow: 0 4px 20px rgba(22, 47, 118, 0.35);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.renewal-header-brand {
+  flex: 1;
+  min-width: 0;
+}
+
+.renewal-header h1 {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.2px;
+}
+
+.renewal-header-brand p {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.78);
+  margin-top: 2px;
+}
+
+.renewal-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.renewal-btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: white;
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 7px 14px;
+  border-radius: 10px;
+  position: relative;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-height: unset;
+  line-height: inherit;
+}
+
+.renewal-btn-back:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #F5B301;
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2), 0 0 12px rgba(255, 255, 255, 0.15);
+}
+
+.renewal-btn-back:active {
+  transform: translateY(0);
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px 48px;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.section-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+  line-height: 1.25;
+}
+
+.section-header p {
+  font-size: 16px;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.alert-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-left: 5px solid #dc2626;
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-bottom: 36px;
+  font-size: 16px;
+  color: #0c0909;
+  line-height: 1.7;
+}
+
+.alert-icon {
+  font-size: 14px;
+  font-weight: 700;
+  color: #dc2626;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.renewal-card,
+.preferences-section,
+.timeline-section {
+  background: white;
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid #dbe4ff;
+  border-top: 4px solid #091D8F;
+}
+
+.renewal-card h3,
+.preferences-section h3,
+.timeline-section h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 20px;
+  line-height: 1.35;
+}
+
+.scholarship-table {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.scholarship-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 18px 20px;
+  border: 1px solid #e2e8f0;
+  border-left: 5px solid;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.scholarship-row:hover {
+  transform: translateX(4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+}
+
+.scholarship-icon {
+  min-width: 110px;
+  min-height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+  text-align: center;
+  line-height: 1;
+  padding: 6px 10px;
+  white-space: nowrap;
+}
+
+.scholarship-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.scholarship-info h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.45;
+}
+
+.scholarship-info p {
+  font-size: 14.5px;
+  color: #475569;
+  margin: 4px 0;
+  line-height: 1.7;
+}
+
+.scholarship-info p strong { color: #1e293b; }
+
+.features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+
+.feature-icon {
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+  min-width: 110px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+  text-align: center;
+  line-height: 1;
+  white-space: nowrap;
+  padding: 6px 10px;
+}
+
+.feature > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.feature h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  line-height: 1.45;
+}
+
+.feature p {
+  font-size: 14.5px;
+  color: #475569;
+  line-height: 1.7;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 18px 0;
+  border-bottom: 1px solid #f1f5f9;
+  position: relative;
+}
+
+.timeline-item:last-child { border-bottom: none; }
+
+.timeline-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 20px;
+  top: 60px;
+  bottom: -18px;
+  width: 2px;
+  background: #e2e8f0;
+}
+
+.timeline-marker {
+  font-size: 13px;
+  font-weight: 800;
+  background: #091D8F;
+  color: white;
+  border-radius: 10px;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.timeline-content {
+  flex: 1;
+  min-width: 0;
+  padding-top: 4px;
+}
+
+.timeline-content h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 6px;
+  line-height: 1.45;
+}
+
+.timeline-content p {
+  font-size: 14.5px;
+  color: #475569;
+  line-height: 1.7;
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.faq-item {
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #dbe4ff;
+  cursor: pointer;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.faq-item:hover,
+.faq-item.open {
+  border-color: #091D8F;
+  box-shadow: 0 4px 15px rgba(9, 29, 143, 0.1);
+}
+
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+  font-size: 15.5px;
+  font-weight: 600;
+  color: #1f2937;
+  line-height: 1.55;
+}
+
+.faq-chevron {
+  color: #091D8F;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.faq-answer {
+  padding: 14px 20px 18px;
+  font-size: 15px;
+  color: #475569;
+  line-height: 1.75;
+  border-top: 1px solid #f1f5f9;
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.btn-primary {
+  background: #091D8F;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: #0b28bf;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: white;
+  color: #374151;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 13px 26px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.btn-secondary:hover {
+  border-color: #091D8F;
+  background: #eff6ff;
+  color: #091D8F;
+}
+
+@media (max-width: 900px) {
+  .renewal-header-actions { justify-content: center; }
+}
+
+@media (max-width: 600px) {
+  .container { padding: 24px 14px; }
+
+  .renewal-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 14px 18px;
+  }
+
+  .renewal-header-brand {
+    text-align: center;
+  }
+
+  .renewal-header-actions {
+    justify-content: center;
+  }
+
+  .renewal-btn-back {
+    width: 100%;
+    max-width: 260px;
+  }
+
+  .renewal-card,
+  .preferences-section,
+  .timeline-section {
+    padding: 20px 16px;
+  }
+
+  .scholarship-row,
+  .feature,
+  .timeline-item {
+    gap: 12px;
+  }
+
+  .scholarship-icon,
+  .feature-icon {
+    min-width: 92px;
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+
+  .action-buttons { flex-direction: column; }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    text-align: center;
+  }
+}

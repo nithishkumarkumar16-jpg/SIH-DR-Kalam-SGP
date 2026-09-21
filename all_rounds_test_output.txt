@@ -1,0 +1,888 @@
+==================================================
+Round 1 — Identity & basic terms
+==================================================
+
+### Q1: What is your name?
+**Intent**: bot_identity | **Slots**: {}
+
+**Response**:
+I'm the **SGP Virtual Assistant**, your scholarship guidance assistant.
+
+I help students check eligibility, prepare required documents, and navigate government scholarship schemes (like NSP and UMIS) 100% offline and securely.
+
+--------------------------------------------------
+
+### Q2: What can you do?
+**Intent**: help | **Slots**: {}
+
+**Response**:
+🤖 **I can help you with:**
+
+📋 **Eligibility Check** — Tell me community, income, and course
+📁 **Document Checklist** — Required proofs & scanning rules
+🏦 **DBT & Bank Setup** — NPCI Aadhaar mapper instructions
+📝 **How to Apply** — Typical NSP & UMIS instructions
+🔍 **Acronym Full Forms** — Ask "NSP full form", "UMIS full form", or "full of UMIS and NSP"
+⚠️ **Rejection Solutions** — How to resolve errors
+🔄 **Renewal Guidance** — Requirements for second/third year
+📅 **Deadlines & Grant Amounts** — Key dates and benefits
+✏️ **Aadhaar Corrections** — How to fix name and DOB discrepancies
+
+💡 *Try asking*: *"What scholarships are available for BC engineering students?"*
+
+--------------------------------------------------
+
+### Q3: What is NSP?
+**Intent**: full_form | **Slots**: {"entities":["NSP"]}
+
+**Response**:
+**NSP** stands for **National Scholarship Portal**.
+
+The Government of India's central unified digital portal for national, ministry, and UGC scholarship schemes.
+
+🌐 **Official Portal**: [scholarships.gov.in](https://scholarships.gov.in)
+
+--------------------------------------------------
+
+### Q4: NSP full form
+**Intent**: full_form | **Slots**: {"entities":["NSP"]}
+
+**Response**:
+**NSP** stands for **National Scholarship Portal**.
+
+The Government of India's central unified digital portal for national, ministry, and UGC scholarship schemes.
+
+🌐 **Official Portal**: [scholarships.gov.in](https://scholarships.gov.in)
+
+--------------------------------------------------
+
+### Q5: What is UMIS?
+**Intent**: full_form | **Slots**: {"entities":["UMIS"]}
+
+**Response**:
+**UMIS** stands for **University Management Information System**.
+
+The official higher education portal of Tamil Nadu used by colleges to manage admissions and coordinate state welfare scholarships (such as Pudhumaipenn, Tamil Pudhalvan, and BC/MBC/SC/ST post-matric fee concessions).
+
+🌐 **Official Portal**: [umis.tn.gov.in](https://umis.tn.gov.in)
+
+--------------------------------------------------
+
+### Q6: UMIS full form
+**Intent**: full_form | **Slots**: {"entities":["UMIS"]}
+
+**Response**:
+**UMIS** stands for **University Management Information System**.
+
+The official higher education portal of Tamil Nadu used by colleges to manage admissions and coordinate state welfare scholarships (such as Pudhumaipenn, Tamil Pudhalvan, and BC/MBC/SC/ST post-matric fee concessions).
+
+🌐 **Official Portal**: [umis.tn.gov.in](https://umis.tn.gov.in)
+
+--------------------------------------------------
+
+### Q7: Full form of NSP and UMIS
+**Intent**: full_form | **Slots**: {"entities":["UMIS","NSP"]}
+
+**Response**:
+Here are the full forms:
+
+• **UMIS**: **University Management Information System** — The official higher education portal of Tamil Nadu used by colleges to manage admissions and coordinate state welfare scholarships (such as Pudhumaipenn, Tamil Pudhalvan, and BC/MBC/SC/ST post-matric fee concessions).
+• **NSP**: **National Scholarship Portal** — The Government of India's central unified digital portal for national, ministry, and UGC scholarship schemes.
+
+--------------------------------------------------
+
+### Q8: What is DBT?
+**Intent**: full_form | **Slots**: {"entities":["DBT"]}
+
+**Response**:
+**DBT** stands for **Direct Benefit Transfer**.
+
+The Government of India's electronic mechanism that credits scholarship funds directly into students' Aadhaar-seeded bank accounts without intermediaries.
+
+🌐 **Official Portal**: [dbtbharat.gov.in](https://dbtbharat.gov.in)
+
+--------------------------------------------------
+
+### Q9: What is NPCI?
+**Intent**: full_form | **Slots**: {"entities":["NPCI"]}
+
+**Response**:
+**NPCI** stands for **National Payments Corporation of India**.
+
+The umbrella organization for retail payments in India; maintains the central Aadhaar mapper switch required for DBT scholarship crediting.
+
+🌐 **Official Portal**: [npci.org.in](https://npci.org.in)
+
+--------------------------------------------------
+
+### Q10: What is Aadhaar seeding?
+**Intent**: dbt_difference | **Slots**: {}
+
+**Response**:
+🔍 **Aadhaar Seeding & Bank Account Connection Levels:**
+
+• **Aadhaar Linked (KYC)**: Aadhaar is on file with the bank for identification purposes. This does not necessarily prove DBT readiness.
+• **Aadhaar Seeded & Mapped**: Aadhaar is linked in the bank's core system and mapped on the NPCI central gateway for Direct Benefit Transfer (DBT) payments.
+• **DBT Enabled / DBT Readiness**: Exact payment requirements depend on the scholarship and disbursement pathway. SGP can guide you on preparation, but cannot inspect live bank or NPCI databases.
+
+💡 *Action*: If you are unsure whether your account is mapped for DBT, check the NPCI consumer portal or request **NPCI DBT Seeding & Mapper Activation** at your bank branch.
+
+📌 *Official portal/reference*: [npci.org.in](https://www.npci.org.in)
+
+--------------------------------------------------
+
+==================================================
+Round 2 — Application guidance
+==================================================
+
+### Q1: How to apply for scholarship?
+**Intent**: apply_general | **Slots**: {}
+
+**Response**:
+📝 **General Step-by-Step Scholarship Application Guide (Typical Overview):**
+
+Exact steps, documents, and verification requirements vary by scheme and current portal instructions. Check the selected scheme's official portal before applying.
+
+**Typical process:**
+1. **Identify Candidate Schemes**: Select the scheme that matches your education level, course, category, and family income.
+2. **Check Scheme Requirements**: Review official eligibility criteria, income ceilings, and deadlines.
+3. **Prepare Required Documents**: Keep your identity proof (Aadhaar), valid income certificate, community certificate (if applicable), and educational marksheets ready.
+4. **Bank & Payment Readiness**: Ensure your single savings bank account is operational and seeded/mapped for DBT if required by the scheme.
+5. **Submit Online Application**:
+   • **National / Central Schemes**: Register on the National Scholarship Portal (NSP) at [scholarships.gov.in](https://scholarships.gov.in).
+   • **Tamil Nadu State Schemes**: Applied through your college scholarship desk via UMIS at [umis.tn.gov.in](https://umis.tn.gov.in) or state portals.
+6. **Verification Route**: Complete institutional verification with your college or school nodal coordinator if required by the portal.
+7. **Track Status**: Monitor application and payment status on the respective official portal.
+
+📌 *Official portal/reference*: [scholarships.gov.in](https://scholarships.gov.in) (NSP) • [umis.tn.gov.in](https://umis.tn.gov.in) (UMIS)
+
+--------------------------------------------------
+
+### Q2: How to apply through NSP?
+**Intent**: apply_nsp | **Slots**: {"entities":["NSP"]}
+
+**Response**:
+📝 **How to Apply on the National Scholarship Portal (NSP) — Typical Process:**
+
+Exact steps and verification rules may vary by specific ministry scheme and academic year.
+
+**Typical application flow:**
+1. **Visit Official Portal**: Go to the National Scholarship Portal at [scholarships.gov.in](https://scholarships.gov.in).
+2. **Complete One-Time Registration (OTR)**: Complete e-KYC using your Aadhaar number and registered mobile number to generate your OTR Reference Number.
+3. **Log In & Select Scheme**: Log in with your OTR credentials to view schemes open for your category and course.
+4. **Fill Application Details**: Provide academic details, institutional AISHE/UDISE code, family income, and community details.
+5. **Upload Required Documents**: Upload required documents (such as income proof, caste certificate, marksheet, and bonafide) in the formats specified on the portal.
+6. **Submit Application**: Review details carefully and submit your application online.
+7. **Institutional Verification**: Coordinate with your institution's scholarship nodal officer for online verification.
+
+📌 *Official portal/reference*: [scholarships.gov.in](https://scholarships.gov.in)
+
+--------------------------------------------------
+
+### Q3: How to apply through UMIS?
+**Intent**: apply_umis | **Slots**: {"entities":["UMIS"]}
+
+**Response**:
+📝 **How to Apply via UMIS (University Management Information System) — Typical Process:**
+
+In Tamil Nadu, collegiate welfare scholarship schemes (such as Pudhumaipenn, Tamil Pudhalvan, and post-matric fee concessions) are typically coordinated through your college scholarship desk:
+
+1. **Student Profile on UMIS**: During admission, your college links your student profile to the state higher education database (UMIS) using your registration or EMIS details.
+2. **Submit Required Documents to College**: Provide copies of your Community Certificate, current financial year Income Certificate, Aadhaar card, fee receipt, and bank passbook details.
+3. **Institutional Entry & Verification**: The college scholarship nodal coordinator registers your application and verifies documents on the official UMIS portal at [umis.tn.gov.in](https://umis.tn.gov.in).
+4. **Departmental Approval**: Applications are forwarded online by the institution to the district welfare department for sanction.
+5. **Direct Benefit Transfer (DBT)**: Sanctioned allowances are credited directly to your Aadhaar-mapped bank account via DBT.
+
+💡 *Note*: Exact steps and verification requirements vary by scheme and institution.
+📌 *Official portal/reference*: [umis.tn.gov.in](https://umis.tn.gov.in)
+
+--------------------------------------------------
+
+### Q4: How to apply for post matric scholarship?
+**Intent**: apply_general | **Slots**: {}
+
+**Response**:
+📝 **General Step-by-Step Scholarship Application Guide (Typical Overview):**
+
+Exact steps, documents, and verification requirements vary by scheme and current portal instructions. Check the selected scheme's official portal before applying.
+
+**Typical process:**
+1. **Identify Candidate Schemes**: Select the scheme that matches your education level, course, category, and family income.
+2. **Check Scheme Requirements**: Review official eligibility criteria, income ceilings, and deadlines.
+3. **Prepare Required Documents**: Keep your identity proof (Aadhaar), valid income certificate, community certificate (if applicable), and educational marksheets ready.
+4. **Bank & Payment Readiness**: Ensure your single savings bank account is operational and seeded/mapped for DBT if required by the scheme.
+5. **Submit Online Application**:
+   • **National / Central Schemes**: Register on the National Scholarship Portal (NSP) at [scholarships.gov.in](https://scholarships.gov.in).
+   • **Tamil Nadu State Schemes**: Applied through your college scholarship desk via UMIS at [umis.tn.gov.in](https://umis.tn.gov.in) or state portals.
+6. **Verification Route**: Complete institutional verification with your college or school nodal coordinator if required by the portal.
+7. **Track Status**: Monitor application and payment status on the respective official portal.
+
+📌 *Official portal/reference*: [scholarships.gov.in](https://scholarships.gov.in) (NSP) • [umis.tn.gov.in](https://umis.tn.gov.in) (UMIS)
+
+--------------------------------------------------
+
+### Q5: Where should I apply for Tamil Nadu scholarship?
+**Intent**: apply_tn | **Slots**: {"state":"Tamil Nadu"}
+
+**Response**:
+📝 **Where & How to Apply for Tamil Nadu Scholarships — Typical Process:**
+
+In Tamil Nadu, government scholarships and fee concessions are processed primarily through these channels:
+
+1. **Collegiate Welfare Scholarships (UMIS Portal)**:
+   • **Portal**: [umis.tn.gov.in](https://umis.tn.gov.in)
+   • **Schemes**: Pudhumaipenn, Tamil Pudhalvan, and Post-Matric Tuition Fee Concessions (BC/MBC/DNC and SC/ST).
+   • **Process**: Coordinated through your college scholarship nodal desk.
+
+2. **Tamil Nadu e-Scholarship Portal**:
+   • **Portal**: [tnscholarships.gov.in](https://tnscholarships.gov.in)
+   • **Schemes**: Post-Matric and Higher Education Special Scholarships for Adi Dravidar and Tribal Welfare.
+
+3. **Counseling-Time Concessions (Single-Window Admissions)**:
+   • **Schemes**: First Graduate Fee Concession (₹25,000/yr) and 7.5% Government School Quota (100% free education).
+   • **Process**: Availed during centralized counseling (TNEA/Medical/DOTE) at the time of seat allotment.
+
+4. **Welfare Board / District Collectorate Schemes**:
+   • Applied through local e-Sevai centres or District Collectorate Welfare Wings (e.g. Agricultural Workers Welfare Board).
+
+💡 *Important*: Ensure your bank account has **NPCI DBT active** and Aadhaar details match your 10th marksheet before applying!
+📌 *Official portal/reference*: [umis.tn.gov.in](https://umis.tn.gov.in) • [tnscholarships.gov.in](https://tnscholarships.gov.in)
+
+--------------------------------------------------
+
+### Q6: What documents are required to apply?
+**Intent**: documents | **Slots**: {}
+
+**Response**:
+📁 **Commonly Required Scholarship Documents:**
+
+Exact documents vary by scholarship scheme and application route. Check the selected scheme's official requirements before submission.
+
+**Common Documents (Frequently Requested):**
+• **Aadhaar Card / Identity Proof**: Ensure name and date of birth match your academic records
+• **Bank Account Details**: Active single savings account mapped for DBT/NPCI
+• **Educational Marksheets**: 10th standard and 12th standard marksheets
+• **Bonafide Student Certificate & Fee Receipt**: Issued by your current college or school
+• **Passport-size Photograph**: Recent color photograph
+
+**Additional Documents (Applicable Based on Scheme Criteria):**
+• **Community / Caste Certificate**: Required for reserved category schemes (SC, ST, BC, MBC, DNC)
+• **Income Certificate**: Required where the scheme specifies an annual family income ceiling
+• **Disability Certificate**: Required for differently-abled schemes (minimum 40% benchmark disability)
+• **First Graduate Certificate & Joint Declaration**: Required if claiming first-generation graduate fee concession in Tamil Nadu
+• **Hostel Resident Certificate**: Required if claiming hosteller maintenance allowance
+
+--------------------------------------------------
+
+### Q7: What should I do before applying?
+**Intent**: readiness | **Slots**: {}
+
+**Response**:
+📊 **8-Step Scholarship Readiness Checklist:**
+
+✅ 1. Aadhaar name and DOB match academic marksheets
+✅ 2. Single savings bank account active and seeded for DBT
+✅ 3. Mobile number linked to both Aadhaar & Bank
+✅ 4. Valid Community Certificate in student's name (where applicable)
+✅ 5. Valid Income Certificate for current financial year (where applicable)
+✅ 6. Educational marksheets ready
+✅ 7. College Bonafide and fee receipt obtained
+✅ 8. First Graduate certificate (if claiming first graduate concession)
+
+*Prepare these details before starting your application!* ✅
+
+--------------------------------------------------
+
+==================================================
+Round 3 — Anti-hallucination eligibility
+==================================================
+
+### Q1: I am an MBC student from Salem studying Engineering with income ₹1,50,000
+**Intent**: eligibility | **Slots**: {"category":"MBC","community":"mbc","district":"Salem","state":"Tamil Nadu","course":"Engineering","level":"ug","income":150000}
+
+**Response**:
+🔍 **Eligibility Assessment**: Community: **MBC** • Income: **≤ ₹1,50,000/yr** • Course: **Engineering** • Level: **UG** • District: **Salem**
+
+**Potentially eligible based on the information provided (2 scheme(s)):**
+
+### 1. Tamil Nadu Post-Matric Scholarship for BC / MBC / DNC Students
+• **Match Status**: 🎯 CONFIRMED MATCH
+• **Grant / Benefit**: 💰 Full Tuition Fee Waiver + Special Fees + Maintenance Allowance
+• **Income Ceiling**: ≤ ₹2,50,000 / year
+• **Official portal/reference**: [https://bcmbcmw.tn.gov.in](https://bcmbcmw.tn.gov.in)
+• **Authority**: BC, MBC & Minorities Welfare Department, Govt of Tamil Nadu
+• **Key Documents**: Community Certificate (BC/MBC/DNC from Tahsildar), Income Certificate (Current Year, parental income ≤ ₹2.5 LPA), Aadhaar Card
+• **Criteria Met**: Meets all mandatory criteria for Tamil Nadu Post-Matric Scholarship for BC / MBC / DNC Students. Eligibility score: 70%.
+
+### 2. PM-YASASVI Post-Matric Scholarship for OBC, EBC & DNT
+• **Match Status**: 🎯 CONFIRMED MATCH
+• **Grant / Benefit**: 💰 Tuition Fee waiver + Annual Maintenance up to ₹20,000
+• **Income Ceiling**: ≤ ₹2,50,000 / year
+• **Official portal/reference**: [https://scholarships.gov.in](https://scholarships.gov.in)
+• **Authority**: Ministry of Social Justice & Empowerment, Govt of India
+• **Key Documents**: Aadhaar Card, Income Certificate (< ₹2.5 LPA), OBC/EBC/DNT Caste Certificate
+• **Criteria Met**: Meets all mandatory criteria for PM-YASASVI Post-Matric Scholarship for OBC, EBC & DNT. Eligibility score: 70%.
+
+📋 **To check additional schemes accurately, I need:**
+• Gender (Female / Male)
+• Government/private school background where applicable
+• Disability status where applicable
+• Parent occupation where applicable
+• Institution type
+• Year of study
+
+*These details are required because I will not assume eligibility conditions that you haven't provided.*
+
+📝 **How to Apply**: Ensure your Aadhaar is linked to your bank with **NPCI DBT active**. Apply via the respective official portal/reference listed above!
+
+--------------------------------------------------
+
+### Q2: I am an MBC female student from Salem studying Engineering with income ₹1,50,000
+**Intent**: eligibility | **Slots**: {"category":"MBC","community":"mbc","district":"Salem","state":"Tamil Nadu","course":"Engineering","level":"ug","gender":"Girls","income":150000}
+
+**Response**:
+🔍 **Eligibility Assessment**: Community: **MBC** • Income: **≤ ₹1,50,000/yr** • Course: **Engineering** • Level: **UG** • District: **Salem** • Gender: **Girls**
+
+**Potentially eligible based on the information provided (2 scheme(s)):**
+
+### 1. Tamil Nadu Post-Matric Scholarship for BC / MBC / DNC Students
+• **Match Status**: 🎯 CONFIRMED MATCH
+• **Grant / Benefit**: 💰 Full Tuition Fee Waiver + Special Fees + Maintenance Allowance
+• **Income Ceiling**: ≤ ₹2,50,000 / year
+• **Official portal/reference**: [https://bcmbcmw.tn.gov.in](https://bcmbcmw.tn.gov.in)
+• **Authority**: BC, MBC & Minorities Welfare Department, Govt of Tamil Nadu
+• **Key Documents**: Community Certificate (BC/MBC/DNC from Tahsildar), Income Certificate (Current Year, parental income ≤ ₹2.5 LPA), Aadhaar Card
+• **Criteria Met**: Meets all mandatory criteria for Tamil Nadu Post-Matric Scholarship for BC / MBC / DNC Students. Eligibility score: 70%.
+
+### 2. PM-YASASVI Post-Matric Scholarship for OBC, EBC & DNT
+• **Match Status**: 🎯 CONFIRMED MATCH
+• **Grant / Benefit**: 💰 Tuition Fee waiver + Annual Maintenance up to ₹20,000
+• **Income Ceiling**: ≤ ₹2,50,000 / year
+• **Official portal/reference**: [https://scholarships.gov.in](https://scholarships.gov.in)
+• **Authority**: Ministry of Social Justice & Empowerment, Govt of India
+• **Key Documents**: Aadhaar Card, Income Certificate (< ₹2.5 LPA), OBC/EBC/DNT Caste Certificate
+• **Criteria Met**: Meets all mandatory criteria for PM-YASASVI Post-Matric Scholarship for OBC, EBC & DNT. Eligibility score: 70%.
+
+📋 **To check additional schemes accurately, I need:**
+• Government/private school background where applicable
+• Disability status where applicable
+• Parent occupation where applicable
+• Institution type
+• Year of study
+
+*These details are required because I will not assume eligibility conditions that you haven't provided.*
+
+📝 **How to Apply**: Ensure your Aadhaar is linked to your bank with **NPCI DBT active**. Apply via the respective official portal/reference listed above!
+
+--------------------------------------------------
+
+### Q3: I am an MBC male student from Salem studying Engineering with income ₹1,50,000
+**Intent**: eligibility | **Slots**: {"category":"MBC","community":"mbc","district":"Salem","state":"Tamil Nadu","course":"Engineering","level":"ug","gender":"Boys","income":150000}
+
+**Response**:
+🔍 **Eligibility Assessment**: Community: **MBC** • Income: **≤ ₹1,50,000/yr** • Course: **Engineering** • Level: **UG** • District: **Salem** • Gender: **Boys**
+
+**Potentially eligible based on the information provided (2 scheme(s)):**
+
+### 1. Tamil Nadu Post-Matric Scholarship for BC / MBC / DNC Students
+• **Match Status**: 🎯 CONFIRMED MATCH
+• **Grant / Benefit**: 💰 Full Tuition Fee Waiver + Special Fees + Maintenance Allowance
+• **Income Ceiling**: ≤ ₹2,50,000 / year
+• **Official portal/reference**: [https://bcmbcmw.tn.gov.in](https://bcmbcmw.tn.gov.in)
+• **Authority**: BC, MBC & Minorities Welfare Department, Govt of Tamil Nadu
+• **Key Documents**: Community Certificate (BC/MBC/DNC from Tahsildar), Income Certificate (Current Year, parental income ≤ ₹2.5 LPA), Aadhaar Card
+• **Criteria Met**: Meets all mandatory criteria for Tamil Nadu Post-Matric Scholarship for BC / MBC / DNC Students. Eligibility score: 70%.
+
+### 2. PM-YASASVI Post-Matric Scholarship for OBC, EBC & DNT
+• **Match Status**: 🎯 CONFIRMED MATCH
+• **Grant / Benefit**: 💰 Tuition Fee waiver + Annual Maintenance up to ₹20,000
+• **Income Ceiling**: ≤ ₹2,50,000 / year
+• **Official portal/reference**: [https://scholarships.gov.in](https://scholarships.gov.in)
+• **Authority**: Ministry of Social Justice & Empowerment, Govt of India
+• **Key Documents**: Aadhaar Card, Income Certificate (< ₹2.5 LPA), OBC/EBC/DNT Caste Certificate
+• **Criteria Met**: Meets all mandatory criteria for PM-YASASVI Post-Matric Scholarship for OBC, EBC & DNT. Eligibility score: 70%.
+
+📋 **To check additional schemes accurately, I need:**
+• Government/private school background where applicable
+• Disability status where applicable
+• Parent occupation where applicable
+• Institution type
+• Year of study
+
+*These details are required because I will not assume eligibility conditions that you haven't provided.*
+
+📝 **How to Apply**: Ensure your Aadhaar is linked to your bank with **NPCI DBT active**. Apply via the respective official portal/reference listed above!
+
+--------------------------------------------------
+
+### Q4: I am an Engineering student with income ₹1,50,000
+**Intent**: eligibility | **Slots**: {"course":"Engineering","level":"ug","income":150000}
+
+**Response**:
+🔍 **Eligibility Assessment**: Course: **Engineering** • Income: **≤ ₹1,50,000/yr**
+
+I can shortlist scholarships for you. First tell me:
+• **Community/category** (e.g. BC, MBC, SC, ST, Minority, General)
+
+Once you share your category, I can immediately identify whether state post-matric, Central Sector, or special welfare schemes apply to you.
+
+--------------------------------------------------
+
+### Q5: I am an Engineering student with 40% disability
+**Intent**: eligibility | **Slots**: {"course":"Engineering","level":"ug","disabilityPercent":40,"disabled":true}
+
+**Response**:
+🔍 **Eligibility Assessment**: Course: **Engineering** • Level: **UG** • Differently Abled: **Yes (40% Benchmark)**
+
+**Potential matching schemes (2 scheme(s)):**
+
+### AICTE Saksham Scholarship Scheme for Specially-Abled Students
+• **Match Status**: ⏳ POTENTIAL MATCH / NEEDS MORE INFORMATION
+• **Grant / Benefit**: 💰 ₹50,000 / year towards tuition and living expenses
+• **Income Ceiling**: ≤ ₹8,00,000 / year
+• **Official portal/reference**: [https://www.aicte-india.org](https://www.aicte-india.org)
+• **Authority**: All India Council for Technical Education (AICTE)
+• **Key Criteria Met**: Gender: Open to all, Open to all categories, Central / Pan-India scheme, Applicable in all districts, Course: Engineering, Disability certified
+• **Mandatory Information Still Required to Confirm**: Annual Family Income (ceiling ≤ ₹8,00,000/year)
+
+### Scholarship for Differently Abled Students (TN)
+• **Match Status**: ⏳ POTENTIAL MATCH / NEEDS MORE INFORMATION
+• **Grant / Benefit**: 💰 ₹1,000 – ₹7,000/year + reader allowance
+• **Income Ceiling**: No income limit
+• **Official portal/reference**: [https://umis.tn.gov.in](https://umis.tn.gov.in)
+• **Authority**: TN Differently Abled Welfare Department
+• **Key Criteria Met**: Gender: Open to all, No income limit, Open to all categories, Applicable in all districts, All collegiate & school courses eligible, Disability certified
+• **Mandatory Information Still Required to Confirm**: State Domicile (Tamil Nadu)
+
+📋 **To check additional schemes accurately, I need:**
+• Family annual income (ceiling: ≤ ₹8,00,000 / year)
+• Confirmation that your technical college is AICTE-approved
+
+*These details are required because I will not assume eligibility conditions that you haven't provided.*
+
+📝 **How to Apply**: Ensure your Aadhaar is linked to your bank with **NPCI DBT active**. Apply via the respective official portal/reference listed above!
+
+--------------------------------------------------
+
+### Q6: I am from Salem and my parent is a registered agricultural labourer
+**Intent**: qa_match | **Slots**: {"district":"Salem","state":"Tamil Nadu","agriLabor":true}
+
+**Response**:
+Children of registered agricultural laborers and smallholders in Salem and nearby rural districts can apply for the Agricultural Workers Children Educational Grant through the Salem District Collectorate Labor Welfare Wing or local e-Sevai centers with their parent's active welfare board member card.
+
+📌 *Official Reference*: Salem District Welfare Office
+
+--------------------------------------------------
+
+### Q7: I am eligible for 7.5% government school quota
+**Intent**: quota_7_5 | **Slots**: {"govtSchoolQuota":true,"govtSchool":true,"state":"Tamil Nadu"}
+
+**Response**:
+🎓 **Tamil Nadu 7.5% Government School Quota & Fee Concession:**
+
+The **7.5% Quota** is a preferential admission and 100% financial assistance policy enacted by the Government of Tamil Nadu for students from government schools.
+
+**Key Provisions:**
+• **Preferential Seats**: 7.5% of seats in professional undergraduate admissions (Engineering via TNEA, Medical MBBS/BDS, Agriculture, Veterinary, Fisheries, and Law) are reserved on a preferential basis.
+• **100% Fee Exemption**: For students admitted under the 7.5% quota, the Tamil Nadu Government covers the **entire educational expense** — including tuition fees, special fees, hostel/boarding charges, and exam fees for the entire duration of the course.
+• **Statutory Requirement**: The student must have studied continuously from **Class 6 to Class 12 in Tamil Nadu Government schools** (Government, Municipal, Corporation, Adi Dravidar & Tribal Welfare, Forest, or Kallar Reclamation schools).
+
+**To assess your potential eligibility, I need to know:**
+1. Did you study continuously from **Class 6 to Class 12 in Tamil Nadu Government schools**? (A bonafide certificate from your Headmaster countersigned by the BEO/DEO is required).
+2. Have you applied for higher education admission through official single-window counseling (such as TNEA for Engineering or TN Medical Selection for MBBS)?
+
+*Note: Exact eligibility and seat allotment are determined by the respective counseling authorities during admission based on verified school records.*
+
+📌 *Official portal/reference*: [tneaonline.org](https://www.tneaonline.org) (Engineering) • [tnmedicalselection.net](https://tnmedicalselection.net) (Medical)
+
+--------------------------------------------------
+
+### Q8: I am a student but I don't know my scholarship eligibility
+**Intent**: i_am_student | **Slots**: {}
+
+**Response**:
+🎓 **Welcome Student!**
+
+I am your local scholarship guidance assistant. I can help you identify schemes, check requirements, and complete your application.
+
+**How can I assist you right now?**
+• **Check Eligibility**: Tell me your community (SC/ST/BC/MBC), annual family income, and course (e.g. Engineering, Arts, Diploma).
+• **Required Documents**: Type "Documents Needed" for a complete checklist.
+• **Application Guide**: Type "How to Apply" for step-by-step NSP & UMIS portals guide.
+• **DBT Bank Setup**: Type "Bank Not Linked" to verify direct scholarship crediting.
+
+Try asking: *"I am an MBC student, income ₹1,50,000, studying Engineering. Am I eligible?"*
+
+--------------------------------------------------
+
+==================================================
+Round 4 — DBT / bank
+==================================================
+
+### Q1: What is DBT?
+**Intent**: full_form | **Slots**: {"entities":["DBT"]}
+
+**Response**:
+**DBT** stands for **Direct Benefit Transfer**.
+
+The Government of India's electronic mechanism that credits scholarship funds directly into students' Aadhaar-seeded bank accounts without intermediaries.
+
+🌐 **Official Portal**: [dbtbharat.gov.in](https://dbtbharat.gov.in)
+
+--------------------------------------------------
+
+### Q2: How do I enable DBT?
+**Intent**: dbt_activate | **Slots**: {"entities":["DBT"]}
+
+**Response**:
+🏦 **How to Activate DBT / Link Bank Account — Typical Steps:**
+
+To enable Direct Benefit Transfer for scholarships, follow these steps:
+1. Visit your bank branch with your original Aadhaar card and passbook photocopy.
+2. Request the **"Aadhaar NPCI DBT Seeding & Consent Form"**.
+3. Mention that you need **NPCI DBT Mapping** for government scholarship disbursement.
+4. Ensure your active mobile number is updated in core banking (CBS).
+5. Obtain a stamped acknowledgement slip from the branch.
+6. Processing typically takes 3 to 7 working days depending on branch and bank sync.
+7. Verify status on the official NPCI consumer portal.
+
+📌 *Official portal/reference*: [npci.org.in](https://www.npci.org.in)
+
+--------------------------------------------------
+
+### Q3: How do I link Aadhaar with my bank account?
+**Intent**: bank_link | **Slots**: {}
+
+**Response**:
+🏦 **How to Activate DBT / Link Bank Account — Typical Steps:**
+
+To enable Direct Benefit Transfer for scholarships, follow these steps:
+1. Visit your bank branch with your original Aadhaar card and passbook photocopy.
+2. Request the **"Aadhaar NPCI DBT Seeding & Consent Form"**.
+3. Mention that you need **NPCI DBT Mapping** for government scholarship disbursement.
+4. Ensure your active mobile number is updated in core banking (CBS).
+5. Obtain a stamped acknowledgement slip from the branch.
+6. Processing typically takes 3 to 7 working days depending on branch and bank sync.
+7. Verify status on the official NPCI consumer portal.
+
+📌 *Official portal/reference*: [npci.org.in](https://www.npci.org.in)
+
+--------------------------------------------------
+
+### Q4: How do I check NPCI mapping?
+**Intent**: dbt_check | **Slots**: {"entities":["NPCI"]}
+
+**Response**:
+🔍 **How to Verify Your DBT Status:**
+
+1. Open the official NPCI consumer portal: [npci.org.in](https://www.npci.org.in)
+2. Navigate to the Aadhaar mapper status verification page.
+3. Enter your 12-digit Aadhaar number and captcha.
+4. Enter the OTP sent to your Aadhaar-linked mobile phone.
+5. If your bank name is displayed with status **"Active"**, your account is mapped for DBT.
+6. If inactive or mapped to a previous account, submit a fresh mandate at your branch.
+
+📌 *Official portal/reference*: [npci.org.in](https://www.npci.org.in)
+
+--------------------------------------------------
+
+### Q5: My Aadhaar is linked to my bank. Is DBT enabled?
+**Intent**: dbt_difference | **Slots**: {"entities":["DBT"]}
+
+**Response**:
+🏦 **Aadhaar Linking vs. DBT Activation:**
+
+Aadhaar being linked to your bank account does not by itself confirm that DBT is active. You should confirm that your Aadhaar is seeded/mapped for DBT through the appropriate official bank branch or official NPCI channel.
+
+**Key distinctions:**
+• **Aadhaar Linked (KYC Only)**: Aadhaar was submitted to the bank solely for identity/KYC records. This does not automatically map your account on the NPCI central switch for Direct Benefit Transfer.
+• **Aadhaar Seeded & Mapped (DBT Pathway)**: Aadhaar number is integrated in core banking (CBS) and registered on the NPCI central mapper switch so government departments can disburse funds via Aadhaar Payment Bridge.
+• **Application Approval**: Even with DBT enabled, scholarship funds will only be received after your scholarship application is verified and sanctioned by the nodal department.
+
+💡 *Next Step*: Check your live status on the NPCI consumer portal or visit your bank branch to request NPCI DBT mapping. SGP can guide you on the steps, but cannot view your live banking records.
+
+📌 *Official portal/reference*: [npci.org.in](https://www.npci.org.in)
+
+--------------------------------------------------
+
+### Q6: My bank account is Aadhaar seeded. Can I receive scholarship?
+**Intent**: dbt_difference | **Slots**: {}
+
+**Response**:
+🏦 **Aadhaar Seeded Status & Scholarship Receipt:**
+
+That is a positive step, but Aadhaar seeding alone does not guarantee scholarship payment. The scholarship must also be approved and the applicable DBT/payment requirements must be satisfied.
+
+**What is required for scholarship disbursement:**
+1. **Application Sanction**: Your scholarship application must be verified by your college nodal officer, approved by the district welfare department, and sanctioned by the ministry.
+2. **Active NPCI Mapping**: Your bank account must be actively seeded and mapped on the NPCI Aadhaar mapper switch.
+3. **Operational Account**: The bank account must be an active, individual (single) account, free of credit freezes or dormancy.
+
+💡 *Note*: Exact payment procedures vary by scheme (some disburse via Aadhaar Payment Bridge while others use Direct Account Transfer via PFMS). SGP provides pre-submission guidance and cannot view your live banking status.
+
+📌 *Official portal/reference*: [npci.org.in](https://www.npci.org.in)
+
+--------------------------------------------------
+
+==================================================
+Round 5 — Documents & verification
+==================================================
+
+### Q1: What documents do I need for scholarship?
+**Intent**: documents | **Slots**: {}
+
+**Response**:
+📁 **Commonly Required Scholarship Documents:**
+
+Exact documents vary by scholarship scheme and application route. Check the selected scheme's official requirements before submission.
+
+**Common Documents (Frequently Requested):**
+• **Aadhaar Card / Identity Proof**: Ensure name and date of birth match your academic records
+• **Bank Account Details**: Active single savings account mapped for DBT/NPCI
+• **Educational Marksheets**: 10th standard and 12th standard marksheets
+• **Bonafide Student Certificate & Fee Receipt**: Issued by your current college or school
+• **Passport-size Photograph**: Recent color photograph
+
+**Additional Documents (Applicable Based on Scheme Criteria):**
+• **Community / Caste Certificate**: Required for reserved category schemes (SC, ST, BC, MBC, DNC)
+• **Income Certificate**: Required where the scheme specifies an annual family income ceiling
+• **Disability Certificate**: Required for differently-abled schemes (minimum 40% benchmark disability)
+• **First Graduate Certificate & Joint Declaration**: Required if claiming first-generation graduate fee concession in Tamil Nadu
+• **Hostel Resident Certificate**: Required if claiming hosteller maintenance allowance
+
+--------------------------------------------------
+
+### Q2: What income certificate is required?
+**Intent**: income_cert | **Slots**: {}
+
+**Response**:
+📄 **Income Certificate Requirements:**
+
+Requirements vary by scheme and issuing authority.
+
+• **Issuing Authority**: In Tamil Nadu, revenue certificates are typically issued by the Revenue Department (Tahsildar / Zonal Deputy Tahsildar) via e-Sevai centres.
+• **Validity**: Income certificates are generally issued for a specific financial year. Portals typically require a certificate valid for the current academic/financial cycle.
+• **Family Details**: Must reflect parental/guardian annual income with the student listed as dependent.
+• **Digital Verification**: Issued with a digital signature and verifiable QR code/barcode.
+
+💡 *Important*: An outdated or invalid income certificate may cause an application to be rejected, returned for correction, or treated as ineligible depending on the scheme's current requirements. Always verify the specific scheme guidelines on the official portal.
+
+📌 *Official portal/reference*: [tnesevai.tn.gov.in](https://www.tnesevai.tn.gov.in)
+
+--------------------------------------------------
+
+### Q3: What community certificate is required?
+**Intent**: community_cert | **Slots**: {}
+
+**Response**:
+📜 **Community / Caste Certificate Information:**
+
+• **Issuing Authority**: In Tamil Nadu, issued by Revenue Department (Tahsildar / RDO) via e-Sevai.
+• **Validity**: Community certificates generally have **permanent validity** in Tamil Nadu once issued.
+• **Student Details**: Should be issued in the student's own name with correct community and sub-caste classification.
+• **Format**: Digital certificate with verifiable QR code/barcode.
+
+📌 *Official portal/reference*: [edistricts.tn.gov.in](https://edistricts.tn.gov.in)
+
+--------------------------------------------------
+
+### Q4: Why should my name match across documents?
+**Intent**: aadhaar_mismatch | **Slots**: {}
+
+**Response**:
+✏️ **Identity Verification & Name Matching:**
+
+Consistent identity details reduce verification problems. SGP can compare names and other fields and classify differences such as exact, minor, or significant mismatch.
+
+**How identity matching works:**
+• **Exact Match**: Full name and initials match across all documents.
+• **Minor Difference**: Minor variations such as initial placement (e.g. "K. Ramesh" vs "Ramesh K") or spacing may be accepted on some state portals or verified through institutional bonafide.
+• **Significant Mismatch**: Completely different spellings, missing surnames, or different dates of birth often lead to automated e-KYC validation failures.
+
+**Recommendations:**
+1. Use SGP's document verification tool on your dashboard to check your match score before applying.
+2. If there is a significant discrepancy, update your Aadhaar demographics via [myaadhaar.uidai.gov.in](https://myaadhaar.uidai.gov.in) before submitting your scholarship application.
+
+📌 *Official portal/reference*: [myaadhaar.uidai.gov.in](https://myaadhaar.uidai.gov.in)
+
+--------------------------------------------------
+
+### Q5: What happens if my Aadhaar name and marksheet name are different?
+**Intent**: aadhaar_mismatch | **Slots**: {}
+
+**Response**:
+✏️ **Applying with Name Differences:**
+
+You may still be able to apply, but the mismatch could cause verification issues. First identify whether it is a minor formatting/spelling difference or a significant difference. SGP can help compare the documents and guide you on the appropriate correction/clarification.
+
+**Guidance:**
+• **Minor Variations (Initials / Order)**: If the difference is only initial placement (e.g. "S. Priya" vs "Priya S"), some state portals or colleges can verify your application with an institutional bonafide or affidavit.
+• **Major Discrepancies (Spelling / Name Change)**: Central portals like NSP use automated e-KYC verification with UIDAI. A major spelling mismatch can prevent portal verification.
+• **Correction Route**: You can update your name on Aadhaar online at [myaadhaar.uidai.gov.in](https://myaadhaar.uidai.gov.in) using your 10th marksheet as Proof of Identity (PoI).
+
+💡 *SGP Tip*: Upload your Aadhaar and marksheet to the SGP Document Verification dashboard to see whether the difference is classified as minor or significant.
+
+📌 *Official portal/reference*: [myaadhaar.uidai.gov.in](https://myaadhaar.uidai.gov.in)
+
+--------------------------------------------------
+
+### Q6: My income certificate has an old date. What should I do?
+**Intent**: income_expired | **Slots**: {}
+
+**Response**:
+⚠️ **Outdated / Prior-Year Income Certificate Guidance:**
+
+• **Portal Requirements**: Most government scholarship portals (such as NSP and state portals) require an income certificate corresponding to the current financial year.
+• **Impact**: An outdated or invalid income certificate may cause an application to be rejected, returned for correction, or treated as ineligible depending on the scheme's current requirements.
+• **Recommended Action**: Apply for a current financial year income certificate through your nearest e-Sevai centre or online via [tnesevai.tn.gov.in](https://www.tnesevai.tn.gov.in).
+• Requirements and processing timelines vary by issuing authority and state.
+
+📌 *Official portal/reference*: [tnesevai.tn.gov.in](https://www.tnesevai.tn.gov.in)
+
+--------------------------------------------------
+
+### Q7: Can you verify whether my certificate is genuine?
+**Intent**: verify_cert | **Slots**: {}
+
+**Response**:
+🔍 **Certificate Authenticity & SGP Verification Scope:**
+
+SGP can perform a document consistency and readiness check, but it cannot independently confirm that a government certificate is genuine.
+
+**What SGP can check locally:**
+• Document image quality & readability
+• Extracted fields and certificate numbers
+• Name, date of birth, and number consistency across your documents
+• Missing or suspicious inconsistencies before portal submission
+
+**For official authenticity verification:**
+Use the issuing department's official verification service or certificate verification mechanism:
+• **Official verification resource (TN Revenue / e-Sevai)**: [edistricts.tn.gov.in](https://edistricts.tn.gov.in)
+• **Official verification resource (Aadhaar)**: [myaadhaar.uidai.gov.in/verify-aadhaar](https://myaadhaar.uidai.gov.in/verify-aadhaar)
+• **Official verification resource (DBT / NPCI Mapper)**: [npci.org.in](https://www.npci.org.in)
+
+--------------------------------------------------
+
+==================================================
+Round 6 — Difficult natural-language questions
+==================================================
+
+### Q1: I don't know whether my bank is DBT enabled. What should I do?
+**Intent**: dbt_check | **Slots**: {"entities":["DBT"]}
+
+**Response**:
+🔍 **How to Verify Your DBT Status:**
+
+1. Open the official NPCI consumer portal: [npci.org.in](https://www.npci.org.in)
+2. Navigate to the Aadhaar mapper status verification page.
+3. Enter your 12-digit Aadhaar number and captcha.
+4. Enter the OTP sent to your Aadhaar-linked mobile phone.
+5. If your bank name is displayed with status **"Active"**, your account is mapped for DBT.
+6. If inactive or mapped to a previous account, submit a fresh mandate at your branch.
+
+📌 *Official portal/reference*: [npci.org.in](https://www.npci.org.in)
+
+--------------------------------------------------
+
+### Q2: My name is different in Aadhaar and 10th marksheet. Can I apply?
+**Intent**: aadhaar_mismatch | **Slots**: {"course":"School","level":"prematric"}
+
+**Response**:
+✏️ **Applying with Name Differences:**
+
+You may still be able to apply, but the mismatch could cause verification issues. First identify whether it is a minor formatting/spelling difference or a significant difference. SGP can help compare the documents and guide you on the appropriate correction/clarification.
+
+**Guidance:**
+• **Minor Variations (Initials / Order)**: If the difference is only initial placement (e.g. "S. Priya" vs "Priya S"), some state portals or colleges can verify your application with an institutional bonafide or affidavit.
+• **Major Discrepancies (Spelling / Name Change)**: Central portals like NSP use automated e-KYC verification with UIDAI. A major spelling mismatch can prevent portal verification.
+• **Correction Route**: You can update your name on Aadhaar online at [myaadhaar.uidai.gov.in](https://myaadhaar.uidai.gov.in) using your 10th marksheet as Proof of Identity (PoI).
+
+💡 *SGP Tip*: Upload your Aadhaar and marksheet to the SGP Document Verification dashboard to see whether the difference is classified as minor or significant.
+
+📌 *Official portal/reference*: [myaadhaar.uidai.gov.in](https://myaadhaar.uidai.gov.in)
+
+--------------------------------------------------
+
+### Q3: I am MBC but I don't know which scholarship is best for me.
+**Intent**: eligibility | **Slots**: {"category":"MBC","community":"mbc"}
+
+**Response**:
+🔍 **Eligibility Assessment**: Community: **MBC**
+
+I can help shortlist the right scholarships.
+
+First tell me:
+1. **Your annual family income** (e.g. "₹1,50,000" or "below 2.5 lakh")
+2. **Your course/degree** (e.g. Engineering, Arts, Science, Medical, Diploma, School)
+
+Then I'll ask only for additional information required by the schemes that match.
+
+--------------------------------------------------
+
+### Q4: I am studying engineering in Tamil Nadu. Which scholarships can I apply for?
+**Intent**: eligibility | **Slots**: {"state":"Tamil Nadu","course":"Engineering","level":"ug"}
+
+**Response**:
+🔍 **Eligibility Assessment**: Course: **Engineering** • State: **Tamil Nadu**
+
+I can shortlist scholarships for you. First tell me:
+• **Community/category** (e.g. BC, MBC, SC, ST, Minority, General)
+• **Annual family income** (e.g. "₹1,50,000" or "2 lakh")
+
+Then I'll ask only for any additional criteria needed for the matching schemes.
+
+--------------------------------------------------
+
+### Q5: I am from Salem. What scholarships are available?
+**Intent**: eligibility | **Slots**: {"district":"Salem","state":"Tamil Nadu"}
+
+**Response**:
+📋 **Scholarship Guidance for Salem Students**
+
+I can help find scholarships available to students in Salem.
+
+Please tell me:
+• **Community/category** (e.g. SC, ST, BC, MBC, Minority, General)
+• **Annual family income** (e.g. "₹1,50,000" or "2 lakh")
+• **Course/degree** (e.g. Engineering, Arts, Science, Medical, Diploma, School)
+
+I'll then shortlist the schemes that match the information you provide.
+
+--------------------------------------------------
+
+### Q6: Can I get both NSP and Tamil Nadu scholarship?
+**Intent**: dual_scholarship | **Slots**: {"state":"Tamil Nadu","entities":["NSP"]}
+
+**Response**:
+⚖️ **Availing NSP and Tamil Nadu Scholarships Concurrently:**
+
+It depends on the specific NSP and Tamil Nadu schemes.
+
+Some scholarships may not permit simultaneous benefits, while some benefits may be compatible. The exact rules are determined by the individual scheme.
+
+**General Guidelines:**
+• **Tuition Fee Concessions**: Most government departments prohibit drawing multiple tuition fee waivers or full maintenance scholarships for the same academic course from different government sources simultaneously.
+• **Living / Incentive Stipends**: Certain incentive schemes (such as Pudhumaipenn or Tamil Pudhalvan monthly student allowances in Tamil Nadu) are specifically designed as welfare grants to support higher education retention and may have distinct concurrent eligibility rules compared to tuition reimbursement schemes.
+
+If you tell me the two scholarship names, I can compare their stored eligibility and concurrent-benefit rules. Before accepting two benefits, confirm the current official scheme guidelines.
+
+--------------------------------------------------
+
+### Q7: Which scholarship should I apply for first?
+**Intent**: which_scholarship_first | **Slots**: {}
+
+**Response**:
+🎯 **Application Sequencing Guidance:**
+
+Application priorities depend on your admission route and qualifying criteria.
+
+**Typical application sequence:**
+1. **Counseling-Time Concessions**: First Graduate Tuition Concession or 7.5% Government School Quota should be claimed during centralized counseling (TNEA/Medical) at seat allotment.
+2. **State Welfare Post-Matric (UMIS)**: Coordinate through your college scholarship nodal desk when admissions open in August/September.
+3. **Targeted State Incentives**: Pudhumaipenn (Girls) or Tamil Pudhalvan (Boys) enrolled through your college UMIS desk for eligible government school students.
+4. **Central / National Schemes (NSP)**: Apply on [scholarships.gov.in](https://scholarships.gov.in) if you meet specific national merit or central ministry criteria and do not draw duplicate state tuition concessions.
+
+📌 *Official portal/reference*: [scholarships.gov.in](https://scholarships.gov.in) (NSP) • [umis.tn.gov.in](https://umis.tn.gov.in) (UMIS)
+
+--------------------------------------------------
+

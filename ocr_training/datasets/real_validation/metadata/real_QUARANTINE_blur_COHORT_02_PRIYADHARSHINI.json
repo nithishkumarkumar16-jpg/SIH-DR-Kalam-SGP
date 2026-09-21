@@ -1,0 +1,22 @@
+{
+  "id": "REAL_VAL_0062",
+  "image_filename": "real_QUARANTINE_blur_COHORT_02_PRIYADHARSHINI.jpg",
+  "image_path": "datasets/real_validation/images/real_QUARANTINE_blur_COHORT_02_PRIYADHARSHINI.jpg",
+  "cohort_id": "COHORT_02_PRIYADHARSHINI",
+  "document_type": "community_certificate",
+  "degradation": "severe_blur_quarantine",
+  "ground_truth": {
+    "studentName": "PRIYADHARSHINI S",
+    "dateOfBirth": "22-08-2006",
+    "parentName": "SUNDARAMURTHY V",
+    "certificateNumber": "TN-QUARANTINE-2",
+    "community": "Kongu Vellalar",
+    "category": "BC"
+  },
+  "privacy": {
+    "synthetic_authorized": true,
+    "contains_real_pii": false
+  },
+  "expected_cross_status": "CONSISTENT",
+  "is_quarantine_sample": true
+}

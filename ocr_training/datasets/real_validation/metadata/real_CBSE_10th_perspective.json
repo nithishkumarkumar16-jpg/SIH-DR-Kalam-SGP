@@ -1,0 +1,25 @@
+{
+  "id": "REAL_VAL_0060",
+  "image_filename": "real_CBSE_10th_perspective.jpg",
+  "image_path": "datasets/real_validation/images/real_CBSE_10th_perspective.jpg",
+  "cohort_id": "CBSE_VALIDATION",
+  "document_type": "10th_marksheet",
+  "degradation": "perspective",
+  "ground_truth": {
+    "studentName": "SENTHIL KUMAR K",
+    "dateOfBirth": "14-05-2005",
+    "parentName": "KRISHNAMOORTHY M",
+    "certificateNumber": "CBSE-2023-8319402",
+    "registrationNumber": "8319402",
+    "schoolName": "Government Higher Secondary School, Madurai",
+    "board": "CBSE",
+    "passingYear": "2023",
+    "issueDate": "15-06-2026",
+    "issuingAuthority": "Central Board of Secondary Education"
+  },
+  "privacy": {
+    "synthetic_authorized": true,
+    "contains_real_pii": false
+  },
+  "expected_cross_status": "CONSISTENT"
+}

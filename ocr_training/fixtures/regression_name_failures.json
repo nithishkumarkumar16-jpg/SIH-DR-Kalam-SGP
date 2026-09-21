@@ -1,0 +1,82 @@
+[
+  {
+    "id": "FAIL_NAME_001",
+    "image_path": "datasets/test/10th_marksheet_0025_uneven_background.jpg",
+    "document_type": "10th_marksheet",
+    "ground_truth_name": "Murugesan",
+    "augmentation_type": "uneven_background",
+    "baseline": {
+      "raw_ocr_snippet": "| ugesan",
+      "extracted_name": null,
+      "confidence": 60,
+      "status": "NOT_DETECTED",
+      "failure_cause": "Uneven lighting gradient darkened left column, clipping 'M' into '|' and detaching candidate from label."
+    },
+    "expected_target": "Murugesan",
+    "safe_target_status": ["HIGH_CONFIDENCE", "NEEDS_REVIEW"]
+  },
+  {
+    "id": "FAIL_NAME_002",
+    "image_path": "datasets/test/12th_marksheet_0026_uneven_background.jpg",
+    "document_type": "12th_marksheet",
+    "ground_truth_name": "Divya",
+    "augmentation_type": "uneven_background",
+    "baseline": {
+      "raw_ocr_snippet": "| Divya }",
+      "extracted_name": null,
+      "confidence": 62,
+      "status": "NOT_DETECTED",
+      "failure_cause": "Left-side shading corrupted the 'STUDENT NAME:' label, isolating 'Divya' on a separated column."
+    },
+    "expected_target": "Divya",
+    "safe_target_status": ["HIGH_CONFIDENCE", "NEEDS_REVIEW"]
+  },
+  {
+    "id": "FAIL_NAME_003",
+    "image_path": "datasets/test/income_certificate_0027_uneven_background.jpg",
+    "document_type": "income_certificate",
+    "ground_truth_name": "Suresh Kumar",
+    "augmentation_type": "uneven_background",
+    "baseline": {
+      "raw_ocr_snippet": ") Suresh Kumar ]",
+      "extracted_name": null,
+      "confidence": 57,
+      "status": "NOT_DETECTED",
+      "failure_cause": "Uneven background shading separated applicant label from 'Suresh Kumar' value line."
+    },
+    "expected_target": "Suresh Kumar",
+    "safe_target_status": ["HIGH_CONFIDENCE", "NEEDS_REVIEW"]
+  },
+  {
+    "id": "FAIL_NAME_004",
+    "image_path": "datasets/test/community_certificate_0028_blurred.jpg",
+    "document_type": "community_certificate",
+    "ground_truth_name": "Keerthana",
+    "augmentation_type": "blurred",
+    "baseline": {
+      "raw_ocr_snippet": "STUDENT AME roerara",
+      "extracted_name": null,
+      "confidence": 43,
+      "status": "NOT_DETECTED",
+      "failure_cause": "Heavy Gaussian blur fused characters into 'roerara' / 'Keertara'. Must NOT be silently guessed."
+    },
+    "expected_target": "Keerthana",
+    "safe_target_status": ["NOT_DETECTED", "NEEDS_REVIEW"]
+  },
+  {
+    "id": "FAIL_NAME_005",
+    "image_path": "datasets/test/community_certificate_0028_uneven_background.jpg",
+    "document_type": "community_certificate",
+    "ground_truth_name": "Keerthana",
+    "augmentation_type": "uneven_background",
+    "baseline": {
+      "raw_ocr_snippet": "STUDENT NAME Keerthana",
+      "extracted_name": null,
+      "confidence": 41,
+      "status": "NOT_DETECTED",
+      "failure_cause": "Severe left-side drop-off caused general dropout across line text."
+    },
+    "expected_target": "Keerthana",
+    "safe_target_status": ["HIGH_CONFIDENCE", "NEEDS_REVIEW"]
+  }
+]
