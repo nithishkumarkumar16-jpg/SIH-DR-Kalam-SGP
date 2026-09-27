@@ -87,6 +87,7 @@
 .btn-pro-back {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 7px;
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.22);
@@ -96,7 +97,13 @@
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
-  padding: 7px 14px;
+  width: 175px;
+  min-width: 175px;
+  height: 38px;
+  min-height: 38px;
+  max-height: 38px;
+  box-sizing: border-box;
+  padding: 0 14px;
   border-radius: 10px;
   position: relative;
   backdrop-filter: blur(8px);
@@ -105,8 +112,7 @@
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
   flex-shrink: 0;
-  min-height: unset;
-  line-height: inherit;
+  line-height: 1;
 }
 .btn-pro-back:hover {
   background: rgba(255, 255, 255, 0.22);
@@ -304,6 +310,80 @@
   .header-brand { justify-content: center; }
   .header-actions { justify-content: center; }
   .documents-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .nsp-step-bar {
+    padding: 0 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .step-item {
+    padding: 12px 10px;
+    gap: 6px;
+  }
+  .step-circle {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+  }
+  .step-label {
+    font-size: 11.5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-container {
+    padding: 0 14px;
+  }
+  .brand-text h1 {
+    font-size: 18px;
+  }
+  .brand-text p {
+    font-size: 11px;
+  }
+  .header-actions {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-pro-back {
+    width: auto;
+    min-width: 0;
+    flex: 1;
+    max-width: 165px;
+    font-size: 12px;
+    padding: 0 10px;
+    height: 36px;
+    min-height: 36px;
+  }
+  .upload-container {
+    padding: 20px 12px;
+  }
+  .section-header {
+    margin-bottom: 24px;
+  }
+  .section-header h2 {
+    font-size: 22px;
+  }
+  .document-card {
+    padding: 18px 14px;
+  }
+  .btn-massive-primary {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 15px;
+  }
+  .nsp-card {
+    padding: 16px 12px;
+  }
+  .nsp-profile-strip {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px 14px;
+  }
 }
 
 /* CUSTOM SCROLLBAR */
@@ -735,7 +815,7 @@
 /* Field table */
 .res-ftbl-wrap  { margin-bottom: 18px; }
 .res-ftbl-label { font-size: 12px; font-weight: 900; color: #374151; margin-bottom: 8px; }
-.res-ftbl       { border-radius: 12px; overflow: hidden; border: 1.5px solid #e2e8f0; }
+.res-ftbl       { border-radius: 12px; overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1.5px solid #e2e8f0; }
 .res-ftbl-hdr   { background: #f8fafc; font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: .08em; color: #94a3b8; }
 .res-ftbl-row   { display: grid; grid-template-columns: 160px 1fr 180px; gap: 12px; padding: 10px 14px; border-bottom: 1px solid #f1f5f9; align-items: center; font-size: 12px; font-weight: 700; color: #0f172a; }
 .res-ftbl-row:last-child { border: none; }
@@ -774,8 +854,17 @@
 /* Responsive */
 @media(max-width:760px){
   .nsp-fg2, .res-dash-grid { grid-template-columns: 1fr; }
-  .res-ftbl-row { grid-template-columns: 90px 1fr 70px; }
+  .res-ftbl-row { grid-template-columns: 100px 1fr 80px; gap: 8px; padding: 8px 10px; font-size: 11px; }
   .res-dash-grid { grid-template-columns: repeat(2,1fr); }
+}
+
+@media(max-width:480px){
+  .res-dash-grid { grid-template-columns: 1fr; }
+  .res-ftbl-row { grid-template-columns: 85px 1fr 70px; gap: 6px; padding: 8px 6px; font-size: 10.5px; }
+  .res-sec-hdr { padding: 10px 12px; flex-wrap: wrap; }
+  .res-sec-badge { font-size: 10.5px; padding: 4px 10px; }
+  .verdict-ok, .verdict-warn, .verdict-fix { padding: 18px 16px; }
+  .verdict-title { font-size: 18px; }
 }
 
 /* ============================================
@@ -1004,4 +1093,34 @@
   font-size: 10px;
   color: #94a3b8;
   font-weight: 500;
+}
+
+@media (max-width: 480px) {
+  .vsc-folder-header {
+    padding: 8px 10px;
+    flex-wrap: wrap;
+  }
+  .vsc-folder-hint {
+    display: none;
+  }
+  .vsc-editor-strip {
+    padding: 8px 0;
+  }
+  .vsc-line-nums {
+    padding: 0 8px;
+    min-width: 28px;
+  }
+  .vsc-env-row {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .vsc-footer-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .vsc-save-btn, .vsc-clear-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }

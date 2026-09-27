@@ -126,7 +126,21 @@ export default function MinistryDashboard() {
   const [tickets, setTickets] = useState([]);
   const [ticketsLoading, setTicketsLoading] = useState(false);
   const [ticketReplyText, setTicketReplyText] = useState("");
+  const [ticketStatusSelect, setTicketStatusSelect] = useState("IN_PROGRESS");
+  const [ticketAdminNote, setTicketAdminNote] = useState("");
+  const [ticketAssignedTo, setTicketAssignedTo] = useState("");
   const [activeTicket, setActiveTicket] = useState(null);
+
+  // Manual Lifecycle Status state
+  const [lifecycleModalOpen, setLifecycleModalOpen] = useState(false);
+  const [selectedLifecycleApp, setSelectedLifecycleApp] = useState(null);
+  const [lifecycleStageInput, setLifecycleStageInput] = useState("MINISTRY_SCRUTINY");
+  const [lifecycleStageLabel, setLifecycleStageLabel] = useState("Ministry Scrutiny");
+  const [lifecycleNote, setLifecycleNote] = useState("");
+  const [lifecycleNextAction, setLifecycleNextAction] = useState("");
+  const [lifecycleWhoMustAct, setLifecycleWhoMustAct] = useState("Ministry Scrutiny Committee");
+  const [lifecycleUpdatedAt, setLifecycleUpdatedAt] = useState("");
+  const [lifecycleSubmitting, setLifecycleSubmitting] = useState(false);
 
   useEffect(() => {
     loadMinistryData();
@@ -137,6 +151,42 @@ export default function MinistryDashboard() {
     if (activeTab === "REPORT_BUILDER") loadReportBuilder();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedState, selectedDistrict, selectedCollegeId, selectedSchemeId, selectedAcademicYear, statusFilter, paymentStatusFilter, activeTab]);
+
+  // Real-time synchronization with Student Dashboard manual status updates
+  useEffect(() => {
+    let bc;
+    try {
+      if (typeof BroadcastChannel !== "undefined") {
+        bc = new BroadcastChannel("sgp_lifecycle_sync");
+        bc.onmessage = (event) => {
+          if (event.data?.type === "LIFECYCLE_UPDATED") {
+            loadMinistryData();
+            loadMinistryTickets();
+          }
+        };
+      }
+    } catch (e) {}
+
+    const handleStorage = (e) => {
+      if (e.key === "sgp_lifecycle_sync_event") {
+        loadMinistryData();
+        loadMinistryTickets();
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+
+    // Periodic poll every 12s for multi-device sync
+    const pollTimer = setInterval(() => {
+      loadMinistryData();
+    }, 12000);
+
+    return () => {
+      if (bc) bc.close();
+      window.removeEventListener("storage", handleStorage);
+      clearInterval(pollTimer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleExportExcel = async () => {
     try {
@@ -345,18 +395,71 @@ export default function MinistryDashboard() {
   };
 
   const handleTicketReply = async (ticketId) => {
-    if (!ticketReplyText.trim()) return;
+    if (!ticketReplyText.trim() && !ticketStatusSelect && !ticketAdminNote.trim()) {
+      alert("Please provide a reply, status update, or admin note.");
+      return;
+    }
     try {
       await apiRequest(`/api/ministry/tickets/${ticketId}/reply`, {
         method: "POST",
-        body: JSON.stringify({ reply: ticketReplyText.trim(), status: "WAITING_FOR_STUDENT" }),
+        body: JSON.stringify({
+          reply: ticketReplyText.trim(),
+          status: ticketStatusSelect,
+          adminNote: ticketAdminNote.trim(),
+          assignedTo: ticketAssignedTo.trim(),
+        }),
       });
-      alert("Reply sent to student.");
+      alert("Ticket updated and response dispatched to student.");
       setTicketReplyText("");
+      setTicketAdminNote("");
+      setTicketAssignedTo("");
       setActiveTicket(null);
       loadMinistryTickets();
     } catch (err) {
       alert("Failed to reply: " + err.message);
+    }
+  };
+
+  const handleOpenLifecycleModal = (appObj) => {
+    if (!appObj) return;
+    setSelectedLifecycleApp(appObj);
+    const stage = appObj?.lifecycleStage || appObj?.applicationStatus || "MINISTRY_SCRUTINY";
+    setLifecycleStageInput(stage);
+    setLifecycleStageLabel(appObj?.currentStage || "Ministry Scrutiny");
+    setLifecycleNextAction(appObj?.nextAction || "State/Ministry scrutiny officer verifies institutional recommendation");
+    setLifecycleWhoMustAct(appObj?.whoMustAct || "Ministry Scrutiny Officer");
+    setLifecycleNote("");
+    setLifecycleUpdatedAt(new Date().toISOString().slice(0, 16));
+    setLifecycleModalOpen(true);
+  };
+
+  const handleSaveLifecycleStatus = async (e) => {
+    e.preventDefault();
+    if (!selectedLifecycleApp?.applicationId) return;
+    try {
+      setLifecycleSubmitting(true);
+      await apiRequest(`/api/ministry/applications/${selectedLifecycleApp.applicationId}/lifecycle-status`, {
+        method: "POST",
+        body: JSON.stringify({
+          lifecycleStage: lifecycleStageInput,
+          stageLabel: lifecycleStageLabel,
+          note: lifecycleNote,
+          nextAction: lifecycleNextAction,
+          whoMustAct: lifecycleWhoMustAct,
+          lastUpdatedAt: lifecycleUpdatedAt ? new Date(lifecycleUpdatedAt) : new Date(),
+        }),
+      });
+      alert("Application lifecycle status updated successfully.");
+      setLifecycleModalOpen(false);
+      loadMinistryData();
+      if (scrutinyApp && scrutinyApp.applicationId === selectedLifecycleApp.applicationId) {
+        const refreshed = await apiRequest(`/api/ministry/applications/${scrutinyApp.applicationId}`).catch(() => null);
+        if (refreshed?.application) setScrutinyApp(refreshed.application);
+      }
+    } catch (err) {
+      alert("Failed to update lifecycle status: " + err.message);
+    } finally {
+      setLifecycleSubmitting(false);
     }
   };
 
@@ -455,6 +558,7 @@ export default function MinistryDashboard() {
         const auditRes = await apiRequest("/api/ministry/audit-logs?limit=50").catch(() => ({ logs: [] }));
         setAuditLogs(auditRes?.logs || []);
       }
+      loadMinistryTickets();
     } catch (err) {
       console.error("Ministry dashboard load error:", err);
     } finally {
@@ -583,10 +687,28 @@ export default function MinistryDashboard() {
             <span className="user-badge">
               🇮🇳 {user?.email} ({user?.role})
             </span>
-            <button className="btn-logout" style={{ background: "#1e293b" }} onClick={() => navigate("/dashboard")}>
+            <button
+              className="sgp-header-btn sgp-header-btn-secondary"
+              onClick={() => navigate("/dashboard")}
+              title="Return to SGP landing dashboard"
+            >
               Main Dashboard
             </button>
-            <button className="btn-logout" onClick={logout}>Sign Out</button>
+            <button
+              className="sgp-header-btn sgp-header-btn-success"
+              onClick={handleExportExcel}
+              disabled={exportLoading}
+              title="Download 5-sheet OpenXML Excel file (.xlsx) matching active filters"
+            >
+              {exportLoading ? "Preparing..." : "Export Excel"}
+            </button>
+            <button
+              className="sgp-header-btn sgp-header-btn-danger"
+              onClick={logout}
+              title="Sign Out of Ministry session"
+            >
+              Sign Out
+            </button>
             <LanguageSelector />
           </div>
         </div>
@@ -1368,7 +1490,7 @@ export default function MinistryDashboard() {
                         )}
                       </td>
                       <td>
-                        <div style={{ display: "flex", gap: "6px" }}>
+                        <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
                           <button
                             className="btn-tbl-scrutiny"
                             onClick={() => {
@@ -1391,6 +1513,14 @@ export default function MinistryDashboard() {
                             }}
                           >
                             Govt Portal Update
+                          </button>
+                          <button
+                            className="btn-tbl-ext"
+                            style={{ background: "#4338ca", borderColor: "#4338ca", color: "#fff" }}
+                            onClick={() => handleOpenLifecycleModal(app)}
+                            title="Manually control student application lifecycle progression"
+                          >
+                            🔄 Lifecycle Status
                           </button>
                         </div>
                       </td>
@@ -1766,49 +1896,170 @@ export default function MinistryDashboard() {
             ) : tickets.length === 0 ? (
               <div style={{ textAlign: "center", padding: "40px", color: "#64748b" }}>No tickets submitted yet.</div>
             ) : (
-              <div className="tickets-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "16px", padding: "12px 0" }}>
-                {tickets.map((t) => (
-                  <div key={t.ticketId} className="ticket-item-card" style={{ border: "1px solid #e2e8f0", borderRadius: "10px", padding: "16px", background: "#f8fafc" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontFamily: "monospace", fontWeight: 700 }}>{t.ticketId}</span>
-                      <span className={`status-pill pill-${t.status.toLowerCase()}`}>{t.status}</span>
-                    </div>
-                    <h4 style={{ margin: "8px 0 4px 0" }}>{t.subject}</h4>
-                    <p style={{ fontSize: "13px", color: "#334155", margin: "0 0 8px 0" }}>{t.message}</p>
-                    <div style={{ fontSize: "12px", color: "#64748b", marginBottom: "8px" }}>
-                      Student: <strong>{t.student?.fullName}</strong> ({t.student?.collegeId}) &bull; Category: {t.category}
-                    </div>
-
-                    {t.latestReply && (
-                      <div style={{ background: "#eff6ff", borderLeft: "3px solid #3b82f6", padding: "8px 12px", borderRadius: "4px", fontSize: "12px" }}>
-                        <strong>Reply ({t.repliedBy || "Officer"}):</strong>
-                        <p style={{ margin: "2px 0 0 0" }}>{t.latestReply}</p>
-                      </div>
-                    )}
-
-                    <div style={{ marginTop: "12px" }}>
-                      {activeTicket?.ticketId === t.ticketId ? (
-                        <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                          <textarea
-                            rows="2"
-                            placeholder="Type official reply or directive..."
-                            value={ticketReplyText}
-                            onChange={(e) => setTicketReplyText(e.target.value)}
-                            style={{ width: "100%", boxSizing: "border-box", padding: "8px", border: "1.5px solid #cbd5e1", borderRadius: "6px" }}
-                          />
-                          <div style={{ display: "flex", gap: "8px" }}>
-                            <button className="btn-reply-send" onClick={() => handleTicketReply(t.ticketId)}>Submit Reply</button>
-                            <button className="clear-btn" onClick={() => setActiveTicket(null)}>Cancel</button>
-                          </div>
+              <div className="tickets-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: "16px", padding: "12px 0" }}>
+                {tickets.map((t) => {
+                  const isOpened = activeTicket?.ticketId === t.ticketId;
+                  const replies = t.replies || (t.latestReply ? [{ sender: t.repliedBy || "Officer", senderRole: "OFFICER", message: t.latestReply, timestamp: t.updatedAt || t.createdAt }] : []);
+                  const isStatusRequest = t.requestType === "STATUS_UPDATE_REQUEST" || (t.ticketId && t.ticketId.startsWith("SGP-STATUS-"));
+                  return (
+                    <div key={t.ticketId} className="ticket-item-card" style={{ border: isStatusRequest ? "1.5px solid #f59e0b" : "1px solid #e2e8f0", borderRadius: "10px", padding: "16px", background: isStatusRequest ? "#fffdf5" : "#f8fafc" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                          <span style={{ fontFamily: "monospace", fontWeight: 700, fontSize: "13px", color: isStatusRequest ? "#92400e" : "#1e3a8a", background: isStatusRequest ? "#fef3c7" : "transparent", padding: isStatusRequest ? "2px 6px" : "0", borderRadius: "4px" }}>{t.ticketId}</span>
+                          <span style={{ fontSize: "11px", background: "#e0e7ff", color: "#3730a3", padding: "2px 6px", borderRadius: "4px" }}>
+                            {t.category}
+                          </span>
+                          {isStatusRequest && (
+                            <span style={{ fontSize: "11px", background: "#fef3c7", color: "#b45309", padding: "2px 8px", borderRadius: "4px", fontWeight: 800, border: "1px solid #fde68a" }}>
+                              🔄 STATUS REQUEST: {t.issueType || "Status Issue"}
+                            </span>
+                          )}
+                          {t.applicationId && (
+                            <span style={{ fontSize: "11px", background: "#f1f5f9", color: "#475569", padding: "2px 6px", borderRadius: "4px" }}>
+                              App: {t.applicationId}
+                            </span>
+                          )}
                         </div>
-                      ) : (
-                        <button className="tbl-btn-review" onClick={() => { setActiveTicket(t); setTicketReplyText(""); }}>
-                          💬 Reply to Ticket
-                        </button>
+                        <span className={`status-pill pill-${(t.status || "open").toLowerCase().replace(/_/g, "-")}`}>{t.status.replace(/_/g, " ")}</span>
+                      </div>
+
+                      <h4 style={{ margin: "8px 0 4px 0", fontSize: "15px", color: "#0f172a" }}>{t.subject}</h4>
+                      <p style={{ fontSize: "13.5px", color: "#334155", margin: "0 0 8px 0", lineHeight: "1.5" }}>{t.message}</p>
+
+                      <div style={{ fontSize: "12px", color: "#64748b", marginBottom: "8px", display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                        <span>Student: <strong>{t.student?.fullName || t.studentId}</strong> ({t.student?.collegeId || t.studentId})</span>
+                        <span>Filed: {new Date(t.createdAt).toLocaleDateString()}</span>
+                        <span>Updated: {new Date(t.updatedAt || t.createdAt).toLocaleDateString()}</span>
+                        {t.officialStatusAtSubmission && (
+                          <span style={{ color: "#2563eb" }}>Reported Status: <strong>{t.officialStatusAtSubmission}</strong></span>
+                        )}
+                        {t.assignedTo && <span>Assigned: <strong>{t.assignedTo}</strong></span>}
+                      </div>
+
+                      {t.adminNote && (
+                        <div style={{ background: "#fef9c3", borderLeft: "3px solid #eab308", padding: "6px 10px", borderRadius: "4px", fontSize: "12px", color: "#854d0e", marginBottom: "8px" }}>
+                          🔒 <strong>Internal Admin Note:</strong> {t.adminNote}
+                        </div>
                       )}
+
+                      {/* Conversation History / Replies Thread */}
+                      {replies.length > 0 && (
+                        <div style={{ background: "#ffffff", border: "1px solid #e2e8f0", borderRadius: "6px", padding: "10px", margin: "8px 0", maxHeight: "180px", overflowY: "auto" }}>
+                          <strong style={{ fontSize: "11.5px", textTransform: "uppercase", color: "#64748b", display: "block", marginBottom: "6px" }}>
+                            Conversation Thread ({replies.length})
+                          </strong>
+                          {replies.map((r, rIdx) => (
+                            <div key={rIdx} style={{ fontSize: "12px", marginBottom: "6px", paddingBottom: "6px", borderBottom: rIdx < replies.length - 1 ? "1px dashed #e2e8f0" : "none" }}>
+                              <div style={{ display: "flex", justifyContent: "space-between", color: "#64748b", fontSize: "11px" }}>
+                                <strong>{r.sender} ({r.senderRole})</strong>
+                                <span>{new Date(r.timestamp).toLocaleString()}</span>
+                              </div>
+                              <p style={{ margin: "2px 0 0 0", color: "#1e293b" }}>{r.message}</p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Reply & Status Form */}
+                      <div style={{ marginTop: "12px" }}>
+                        {isOpened ? (
+                          <div className="reply-form-inline" style={{ background: "#ffffff", border: "1px solid #cbd5e1", borderRadius: "8px", padding: "12px" }}>
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "8px" }}>
+                              <div>
+                                <label style={{ fontSize: "12px", fontWeight: 700, display: "block", marginBottom: "4px" }}>Update Status:</label>
+                                <select
+                                  value={ticketStatusSelect}
+                                  onChange={(e) => setTicketStatusSelect(e.target.value)}
+                                  style={{ width: "100%", padding: "6px 8px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "12.5px" }}
+                                >
+                                  <option value="OPEN">OPEN</option>
+                                  <option value="IN_PROGRESS">IN_PROGRESS</option>
+                                  <option value="WAITING_FOR_STUDENT">WAITING_FOR_STUDENT</option>
+                                  <option value="RESOLVED">RESOLVED</option>
+                                  <option value="CLOSED">CLOSED</option>
+                                </select>
+                              </div>
+                              <div>
+                                <label style={{ fontSize: "12px", fontWeight: 700, display: "block", marginBottom: "4px" }}>Assign To Officer:</label>
+                                <input
+                                  type="text"
+                                  placeholder="e.g. Scrutiny Officer A"
+                                  value={ticketAssignedTo}
+                                  onChange={(e) => setTicketAssignedTo(e.target.value)}
+                                  style={{ width: "100%", boxSizing: "border-box", padding: "6px 8px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "12.5px" }}
+                                />
+                              </div>
+                            </div>
+
+                            <div style={{ marginBottom: "8px" }}>
+                              <label style={{ fontSize: "12px", fontWeight: 700, display: "block", marginBottom: "4px" }}>Internal Ministry Note (Confidential):</label>
+                              <input
+                                type="text"
+                                placeholder="Internal observation not visible to student..."
+                                value={ticketAdminNote}
+                                onChange={(e) => setTicketAdminNote(e.target.value)}
+                                style={{ width: "100%", boxSizing: "border-box", padding: "6px 8px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "12.5px" }}
+                              />
+                            </div>
+
+                            <div style={{ marginBottom: "8px" }}>
+                              <label style={{ fontSize: "12px", fontWeight: 700, display: "block", marginBottom: "4px" }}>Official Reply to Student:</label>
+                              <textarea
+                                rows="3"
+                                placeholder="Type resolution or guidance for the student..."
+                                value={ticketReplyText}
+                                onChange={(e) => setTicketReplyText(e.target.value)}
+                                style={{ width: "100%", boxSizing: "border-box", padding: "8px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "13px" }}
+                              />
+                            </div>
+
+                            <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
+                              <button className="clear-btn" onClick={() => setActiveTicket(null)}>Cancel</button>
+                              <button className="btn-reply-send" onClick={() => handleTicketReply(t.ticketId)}>
+                                Send Reply &amp; Update Ticket
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+                            <button
+                              className="tbl-btn-review"
+                              onClick={() => {
+                                setActiveTicket(t);
+                                setTicketReplyText("");
+                                setTicketStatusSelect(t.status || "IN_PROGRESS");
+                                setTicketAdminNote(t.adminNote || "");
+                                setTicketAssignedTo(t.assignedTo || "");
+                              }}
+                            >
+                              💬 Open Ticket &amp; Reply
+                            </button>
+                            {t.applicationId && (
+                              <button
+                                type="button"
+                                className="tbl-btn-review"
+                                style={{ background: "#059669", color: "#ffffff" }}
+                                onClick={() => {
+                                  const appFound = applications.find((a) => a.applicationId === t.applicationId);
+                                  const appToOpen = appFound || {
+                                    applicationId: t.applicationId,
+                                    applicationStatus: t.officialStatusAtSubmission || "MINISTRY_SCRUTINY",
+                                    student: t.student,
+                                    scheme: appFound?.scheme,
+                                  };
+                                  handleOpenLifecycleModal(appToOpen);
+                                }}
+                                title="Open Official Lifecycle Status Modal for this Application"
+                              >
+                                🔄 Update Official Status
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -2334,6 +2585,125 @@ export default function MinistryDashboard() {
                   Close Preview
                 </button>
               </div>
+            </div>
+          </div>
+        )}
+        {/* MANUAL LIFECYCLE STATUS MODAL */}
+        {lifecycleModalOpen && selectedLifecycleApp && (
+          <div className="modal-backdrop" onClick={() => setLifecycleModalOpen(false)}>
+            <div className="modal-box" style={{ maxWidth: "560px", background: "#ffffff", borderRadius: "12px", padding: "24px" }} onClick={(e) => e.stopPropagation()}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                <h3 style={{ margin: 0, fontSize: "18px", color: "#02065c" }}>🔄 Update Student Lifecycle Status</h3>
+                <button className="drawer-close" style={{ position: "static", cursor: "pointer", background: "none", border: "none", fontSize: "18px" }} onClick={() => setLifecycleModalOpen(false)}>✕</button>
+              </div>
+              <p style={{ fontSize: "13px", color: "#64748b", margin: "0 0 16px 0" }}>
+                Ministry/Admin manual progression for <strong>{selectedLifecycleApp.student?.fullName || selectedLifecycleApp.studentId}</strong> (Application: <strong>{selectedLifecycleApp.applicationId}</strong>).
+              </p>
+
+              <form onSubmit={handleSaveLifecycleStatus}>
+                <div className="form-group" style={{ marginBottom: "14px" }}>
+                  <label style={{ display: "block", fontSize: "12.5px", fontWeight: 700, marginBottom: "4px" }}>Current Lifecycle Stage *</label>
+                  <select
+                    value={lifecycleStageInput}
+                    onChange={(e) => {
+                      const chosen = e.target.value;
+                      setLifecycleStageInput(chosen);
+                      const STAGES_MAP = {
+                        DRAFT: { label: "Application Created", who: "Student", next: "Student completes document uploads and profile verification" },
+                        DOCUMENT_VERIFICATION: { label: "Documents Uploaded & OCR", who: "Automated OCR Verification", next: "Pre-check eligibility rules and submit to college" },
+                        ELIGIBILITY_CONFIRMED: { label: "Eligibility Pre-Check", who: "SGP Verification Engine", next: "Forwarding application to College Verification Authority" },
+                        COLLEGE_REVIEW: { label: "College Verification", who: "College Verification Officer", next: "Institutional committee conducts document inspection" },
+                        CORRECTION_REQUIRED: { label: "Correction / Resubmission", who: "Student", next: "Student must resubmit defective certificates flagged by authority" },
+                        MINISTRY_SCRUTINY: { label: "Ministry Scrutiny", who: "Ministry Scrutiny Committee", next: "State/Ministry scrutiny officer verifies institutional recommendation" },
+                        SELECTION: { label: "Selection Committee", who: "Selection Committee", next: "Selection committee evaluates merit ranking and quota" },
+                        SANCTIONED: { label: "Award & Sanction", who: "Sanctioning Authority", next: "Generate formal award letter and sanction order" },
+                        PAID: { label: "DBT Payment Credit", who: "PFMS / Bank DBT Cell", next: "Direct Benefit Transfer credit via NPCI Aadhaar-seeded bank account" },
+                        COMPLETED: { label: "Renewal / Completion", who: "Student / Institution", next: "Application cycle completed. Track renewal period." },
+                      };
+                      if (STAGES_MAP[chosen]) {
+                        setLifecycleStageLabel(STAGES_MAP[chosen].label);
+                        setLifecycleWhoMustAct(STAGES_MAP[chosen].who);
+                        setLifecycleNextAction(STAGES_MAP[chosen].next);
+                      }
+                    }}
+                    style={{ width: "100%", padding: "8px 10px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "13px" }}
+                  >
+                    <option value="DRAFT">1. Application Created (DRAFT)</option>
+                    <option value="DOCUMENT_VERIFICATION">2. Documents Uploaded &amp; OCR (DOCUMENT_VERIFICATION)</option>
+                    <option value="ELIGIBILITY_CONFIRMED">3. Eligibility Pre-Check (ELIGIBILITY_CONFIRMED)</option>
+                    <option value="COLLEGE_REVIEW">4. College Verification (COLLEGE_REVIEW)</option>
+                    <option value="CORRECTION_REQUIRED">5. Correction / Resubmission (CORRECTION_REQUIRED)</option>
+                    <option value="MINISTRY_SCRUTINY">6. Ministry Scrutiny (MINISTRY_SCRUTINY)</option>
+                    <option value="SELECTION">7. Selection Committee (SELECTION)</option>
+                    <option value="SANCTIONED">8. Award &amp; Sanction (SANCTIONED)</option>
+                    <option value="PAID">9. DBT Payment Credit (PAID)</option>
+                    <option value="COMPLETED">10. Renewal / Completion (COMPLETED)</option>
+                  </select>
+                </div>
+
+                <div className="form-group" style={{ marginBottom: "14px" }}>
+                  <label style={{ display: "block", fontSize: "12.5px", fontWeight: 700, marginBottom: "4px" }}>Stage Display Label *</label>
+                  <input
+                    type="text"
+                    value={lifecycleStageLabel}
+                    onChange={(e) => setLifecycleStageLabel(e.target.value)}
+                    required
+                    style={{ width: "100%", boxSizing: "border-box", padding: "8px 10px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "13px" }}
+                  />
+                </div>
+
+                <div className="form-group" style={{ marginBottom: "14px" }}>
+                  <label style={{ display: "block", fontSize: "12.5px", fontWeight: 700, marginBottom: "4px" }}>Who Must Act (Responsible Authority)</label>
+                  <input
+                    type="text"
+                    value={lifecycleWhoMustAct}
+                    onChange={(e) => setLifecycleWhoMustAct(e.target.value)}
+                    placeholder="e.g. Ministry Scrutiny Committee"
+                    style={{ width: "100%", boxSizing: "border-box", padding: "8px 10px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "13px" }}
+                  />
+                </div>
+
+                <div className="form-group" style={{ marginBottom: "14px" }}>
+                  <label style={{ display: "block", fontSize: "12.5px", fontWeight: 700, marginBottom: "4px" }}>Next Action Required</label>
+                  <input
+                    type="text"
+                    value={lifecycleNextAction}
+                    onChange={(e) => setLifecycleNextAction(e.target.value)}
+                    placeholder="e.g. Committee scrutiny and merit ranking"
+                    style={{ width: "100%", boxSizing: "border-box", padding: "8px 10px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "13px" }}
+                  />
+                </div>
+
+                <div className="form-group" style={{ marginBottom: "14px" }}>
+                  <label style={{ display: "block", fontSize: "12.5px", fontWeight: 700, marginBottom: "4px" }}>Status / Update Note / Reason</label>
+                  <textarea
+                    rows={2}
+                    value={lifecycleNote}
+                    onChange={(e) => setLifecycleNote(e.target.value)}
+                    placeholder="Enter official notes or rationale for this status update..."
+                    style={{ width: "100%", boxSizing: "border-box", padding: "8px 10px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "13px" }}
+                  />
+                </div>
+
+                <div className="form-group" style={{ marginBottom: "14px" }}>
+                  <label style={{ display: "block", fontSize: "12.5px", fontWeight: 700, marginBottom: "4px" }}>Effective Date / Time</label>
+                  <input
+                    type="datetime-local"
+                    value={lifecycleUpdatedAt}
+                    onChange={(e) => setLifecycleUpdatedAt(e.target.value)}
+                    style={{ width: "100%", boxSizing: "border-box", padding: "8px 10px", borderRadius: "6px", border: "1px solid #cbd5e1", fontSize: "13px" }}
+                  />
+                </div>
+
+                <div className="modal-actions" style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "18px" }}>
+                  <button type="button" className="btn-cancel" onClick={() => setLifecycleModalOpen(false)}>
+                    Cancel
+                  </button>
+                  <button type="submit" className="sgp-header-btn sgp-header-btn-primary" disabled={lifecycleSubmitting}>
+                    {lifecycleSubmitting ? "Saving..." : "Save Lifecycle Update"}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         )}

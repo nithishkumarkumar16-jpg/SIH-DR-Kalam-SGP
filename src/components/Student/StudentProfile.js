@@ -7,7 +7,7 @@ import "./StudentProfile.css";
 
 export default function StudentProfile() {
   const navigate = useNavigate();
-  const { refreshUser } = useAuth();
+  const { user, refreshUser } = useAuth();
 
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -31,6 +31,28 @@ export default function StudentProfile() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const calculateCompletion = () => {
+    if (!student) return 0;
+    const fields = [
+      student.fullName,
+      student.email || user?.email,
+      student.mobile || user?.mobile,
+      student.dateOfBirth,
+      student.gender,
+      student.category,
+      student.collegeId,
+      student.course,
+      student.department,
+      student.studyYear,
+      student.registerNumber,
+      student.familyIncome,
+      student.state,
+      student.district,
+    ];
+    const filled = fields.filter((f) => f !== undefined && f !== null && String(f).trim() !== "" && f !== 0).length;
+    return Math.round((filled / fields.length) * 100);
   };
 
   const handleChange = (e) => {
@@ -71,6 +93,8 @@ export default function StudentProfile() {
     );
   }
 
+  const completionPercent = calculateCompletion();
+
   return (
     <div className="profile-page">
       <header className="profile-header">
@@ -83,8 +107,14 @@ export default function StudentProfile() {
             </div>
           </div>
           <div className="header-actions">
-            <button className="nav-back-btn" onClick={() => navigate("/dashboard")}>
+            <button className="sgp-header-btn sgp-header-btn-secondary" onClick={() => navigate("/dashboard")}>
               ← Back to Dashboard
+            </button>
+            <button className="sgp-header-btn sgp-header-btn-ghost" onClick={() => navigate("/student/status")}>
+              📊 Application Status
+            </button>
+            <button className="sgp-header-btn sgp-header-btn-ghost" onClick={() => navigate("/student/tickets")}>
+              🎫 Need Help?
             </button>
             <LanguageSelector />
           </div>
@@ -103,6 +133,9 @@ export default function StudentProfile() {
             <span className="pill-badge pill-blue">🎓 {student?.course || "UG"}</span>
             <span className="pill-badge pill-purple">🏛️ {student?.studyYear || "Year"}</span>
             <span className="pill-badge pill-green">🏷️ {student?.category || "Category"}</span>
+            <span className="pill-badge" style={{ background: "#fef3c7", color: "#92400e", border: "1px solid #fde68a" }}>
+              🎯 {completionPercent}% Profile Complete
+            </span>
           </div>
         </div>
 
@@ -122,6 +155,30 @@ export default function StudentProfile() {
                   value={student?.fullName || ""}
                   onChange={handleChange}
                   required
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Email Address</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={student?.email || user?.email || ""}
+                  disabled
+                  title="Registered account email (managed via login credentials)"
+                  style={{ background: "#f8fafc", cursor: "not-allowed" }}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Mobile Number</label>
+                <input
+                  type="tel"
+                  name="mobile"
+                  value={student?.mobile || user?.mobile || ""}
+                  disabled
+                  placeholder="Not linked"
+                  style={{ background: "#f8fafc", cursor: "not-allowed" }}
                 />
               </div>
 
@@ -233,6 +290,18 @@ export default function StudentProfile() {
                   name="registerNumber"
                   value={student?.registerNumber || ""}
                   onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Institution Code / College</label>
+                <input
+                  type="text"
+                  name="collegeId"
+                  value={student?.collegeId || ""}
+                  disabled
+                  title="Affiliated College ID"
+                  style={{ background: "#f8fafc", cursor: "not-allowed" }}
                 />
               </div>
 

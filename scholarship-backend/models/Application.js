@@ -17,7 +17,8 @@ const APPLICATION_STATUSES = [
   "PAYMENT_PENDING",
   "PAID",
   "CONTINUATION",
-  "COMPLETED"
+  "COMPLETED",
+  "SELECTION"
 ];
 
 const ApplicationSchema = new mongoose.Schema({
@@ -36,6 +37,30 @@ const ApplicationSchema = new mongoose.Schema({
   currentStage: { type: String, default: "Draft Stage" },
   whoMustAct: { type: String, default: "Student" },
   nextAction: { type: String, default: "Complete verification and submit application" },
+
+  // SGP Manual Lifecycle Status Tracking
+  lifecycleStage: {
+    type: String,
+    enum: [
+      "DRAFT",
+      "DOCUMENT_VERIFICATION",
+      "ELIGIBILITY_CONFIRMED",
+      "COLLEGE_REVIEW",
+      "CORRECTION_REQUIRED",
+      "MINISTRY_SCRUTINY",
+      "SELECTION",
+      "SANCTIONED",
+      "PAID",
+      "COMPLETED",
+      null,
+    ],
+    default: null,
+    index: true,
+  },
+  lifecycleNote: { type: String },
+  lifecycleLastUpdated: { type: Date },
+  lifecycleUpdatedBy: { type: String },
+  lifecycleUpdatedByRole: { type: String },
   
   // External Official Government Portal Tracking (Part 11 / 30)
   externalApplicationId: { type: String, trim: true },

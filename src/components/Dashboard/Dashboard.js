@@ -14,8 +14,48 @@ function Dashboard() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeApp, setActiveApp] = useState(null);
+  const [studentDropdownOpen, setStudentDropdownOpen] = useState(false);
+  const [quickSyncLoading, setQuickSyncLoading] = useState(false);
+  const [quickSyncSuccess, setQuickSyncSuccess] = useState(null);
   const notifRef = useRef(null);
   const mobileNavRef = useRef(null);
+  const studentMenuRef = useRef(null);
+
+  const handleDashboardQuickStatus = async (targetStage, label) => {
+    if (!activeApp?.applicationId) return;
+    try {
+      setQuickSyncLoading(true);
+      setQuickSyncSuccess(null);
+      const res = await apiRequest(`/api/student/applications/${activeApp.applicationId}/lifecycle-status`, {
+        method: "POST",
+        body: JSON.stringify({
+          lifecycleStage: targetStage,
+          note: `Quick dashboard selection: ${label}`,
+        }),
+      });
+      if (res?.application) {
+        setActiveApp(res.application);
+      }
+      try {
+        if (typeof BroadcastChannel !== "undefined") {
+          const bc = new BroadcastChannel("sgp_lifecycle_sync");
+          bc.postMessage({ type: "LIFECYCLE_UPDATED", applicationId: activeApp.applicationId, newStage: targetStage });
+          bc.close();
+        }
+        localStorage.setItem("sgp_lifecycle_sync_event", JSON.stringify({
+          applicationId: activeApp.applicationId,
+          newStage: targetStage,
+          timestamp: Date.now()
+        }));
+      } catch (e) {}
+      setQuickSyncSuccess(`Status updated to "${label}" and synced to Admin Portal!`);
+      setTimeout(() => setQuickSyncSuccess(null), 5000);
+    } catch (err) {
+      alert("Failed to update status: " + err.message);
+    } finally {
+      setQuickSyncLoading(false);
+    }
+  };
 
   // Fetch active student application if logged in as student
   useEffect(() => {
@@ -35,7 +75,7 @@ function Dashboard() {
     }
   }, [user]);
 
-  // Close notifications on outside click
+  // Close notifications and dropdowns on outside click
   useEffect(() => {
     function handleClickOutside(e) {
       if (notifRef.current && !notifRef.current.contains(e.target)) {
@@ -43,6 +83,9 @@ function Dashboard() {
       }
       if (mobileNavRef.current && !mobileNavRef.current.contains(e.target) && !e.target.closest(".mobile-hamburger-btn")) {
         setMobileMenuOpen(false);
+      }
+      if (studentMenuRef.current && !studentMenuRef.current.contains(e.target)) {
+        setStudentDropdownOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -55,6 +98,7 @@ function Dashboard() {
       if (e.key === "Escape") {
         setShowNotifications(false);
         setMobileMenuOpen(false);
+        setStudentDropdownOpen(false);
       }
     }
     document.addEventListener("keydown", handleKeyDown);
@@ -311,26 +355,86 @@ function Dashboard() {
             {isAuthenticated ? (
               <div className="user-header-group" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 {user?.role === "STUDENT" ? (
-                  <>
-                    <button className="utility-link" aria-label="View Student Profile" onClick={() => handleNavigation("/student/profile")}>
-                      👤 Profile
+                  <div className="student-menu-dropdown-wrapper" ref={studentMenuRef} style={{ position: "relative" }}>
+                    <button
+                      type="button"
+                      className="sgp-header-btn sgp-header-btn-ghost utility-link student-menu-trigger"
+                      aria-label="Student Services Menu"
+                      aria-haspopup="true"
+                      aria-expanded={studentDropdownOpen}
+                      onClick={() => setStudentDropdownOpen((prev) => !prev)}
+                      style={{ display: "inline-flex", alignItems: "center", gap: "7px" }}
+                    >
+                      <span>👤 Student Menu</span>
+                      <span style={{ fontSize: "10px", transition: "transform 0.2s", transform: studentDropdownOpen ? "rotate(180deg)" : "none" }}>▼</span>
                     </button>
-                    <button className="utility-link" aria-label="View Application Status" onClick={() => handleNavigation("/student/status")}>
-                      📊 Application Status
-                    </button>
-                  </>
+
+                    {studentDropdownOpen && (
+                      <div className="student-services-dropdown" role="menu">
+                        <button
+                          type="button"
+                          className="student-dropdown-option"
+                          role="menuitem"
+                          aria-label="View Student Profile"
+                          onClick={() => {
+                            setStudentDropdownOpen(false);
+                            navigate("/student/profile");
+                          }}
+                        >
+                          <span className="opt-icon">👤</span>
+                          <div className="opt-content">
+                            <strong>Profile</strong>
+                            <span>View personal &amp; academic details</span>
+                          </div>
+                        </button>
+
+                        <button
+                          type="button"
+                          className="student-dropdown-option"
+                          role="menuitem"
+                          aria-label="View Application Status"
+                          onClick={() => {
+                            setStudentDropdownOpen(false);
+                            navigate("/student/status");
+                          }}
+                        >
+                          <span className="opt-icon">📊</span>
+                          <div className="opt-content">
+                            <strong>Application Status</strong>
+                            <span>Track 10-stage lifecycle progress</span>
+                          </div>
+                        </button>
+
+                        <button
+                          type="button"
+                          className="student-dropdown-option"
+                          role="menuitem"
+                          aria-label="Support Tickets"
+                          onClick={() => {
+                            setStudentDropdownOpen(false);
+                            navigate("/student/tickets");
+                          }}
+                        >
+                          <span className="opt-icon">🎫</span>
+                          <div className="opt-content">
+                            <strong>Need Help?</strong>
+                            <span>Submit tickets &amp; report status issues</span>
+                          </div>
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 ) : user?.role.startsWith("COLLEGE") ? (
-                  <button className="utility-link" style={{ background: "#2563eb", color: "#fff", padding: "6px 12px", borderRadius: "6px" }} onClick={() => navigate("/college/dashboard")}>
+                  <button className="sgp-header-btn sgp-header-btn-primary utility-link" onClick={() => navigate("/college/dashboard")}>
                     🏛️ College Portal
                   </button>
                 ) : (
-                  <button className="utility-link" style={{ background: "#7c3aed", color: "#fff", padding: "6px 12px", borderRadius: "6px" }} onClick={() => navigate("/ministry/dashboard")}>
+                  <button className="sgp-header-btn sgp-header-btn-ministry utility-link" onClick={() => navigate("/ministry/dashboard")}>
                     🇮🇳 Ministry Portal
                   </button>
                 )}
                 <button
-                  className="utility-link btn-sign-out"
-                  style={{ background: "#dc2626", color: "#fff", padding: "5px 10px", borderRadius: "6px", fontSize: "12px" }}
+                  className="sgp-header-btn sgp-header-btn-danger utility-link btn-sign-out"
                   aria-label="Sign Out of Session"
                   onClick={logout}
                 >
@@ -339,8 +443,8 @@ function Dashboard() {
               </div>
             ) : (
               <button
-                className="utility-link"
-                style={{ background: "#2563eb", color: "#ffffff", padding: "7px 14px", borderRadius: "8px", fontWeight: 800 }}
+                className="sgp-header-btn sgp-header-btn-primary utility-link"
+                style={{ fontWeight: 800 }}
                 onClick={() => navigate("/login")}
               >
                 🔐 Portal Login →
@@ -384,11 +488,14 @@ function Dashboard() {
                 <>
                   {user?.role === "STUDENT" ? (
                     <>
-                      <button className="mobile-nav-item" onClick={() => { setMobileMenuOpen(false); handleNavigation("/student/profile"); }}>
+                      <button className="mobile-nav-item" onClick={() => { setMobileMenuOpen(false); navigate("/student/profile"); }}>
                         👤 Profile
                       </button>
-                      <button className="mobile-nav-item" onClick={() => { setMobileMenuOpen(false); handleNavigation("/student/status"); }}>
+                      <button className="mobile-nav-item" onClick={() => { setMobileMenuOpen(false); navigate("/student/status"); }}>
                         📊 Application Status
+                      </button>
+                      <button className="mobile-nav-item" onClick={() => { setMobileMenuOpen(false); navigate("/student/tickets"); }}>
+                        🎫 Need Help? / Support Tickets
                       </button>
                     </>
                   ) : user?.role.startsWith("COLLEGE") ? (
@@ -463,6 +570,171 @@ function Dashboard() {
               <p>All uploaded documents and images are automatically deleted after you exit this page for your safety and privacy.</p>
             </div>
             <button className="warning-close" onClick={() => setShowDeleteWarning(false)}>✕</button>
+          </div>
+        )}
+
+        {/* ACTIVE STUDENT APPLICATION LIFECYCLE WIDGET */}
+        {user?.role === "STUDENT" && activeApp && (
+          <div className="student-active-app-banner" style={{
+            background: "#ffffff",
+            border: "1.5px solid #cbd5e1",
+            borderRadius: "14px",
+            padding: "16px 20px",
+            marginBottom: "20px",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px"
+          }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "10px" }}>
+              <div>
+                <span style={{ fontSize: "11px", fontWeight: "800", background: "#e0f2fe", color: "#0369a1", padding: "3px 8px", borderRadius: "4px" }}>
+                  {activeApp.applicationId}
+                </span>
+                <h4 style={{ margin: "4px 0 2px 0", fontSize: "16px", color: "#0f172a" }}>
+                  {activeApp.schemeId} &bull; <span style={{ fontWeight: 500, color: "#64748b", fontSize: "13px" }}>Stage: {activeApp.currentStage}</span>
+                </h4>
+                <p style={{ margin: 0, fontSize: "12px", color: "#64748b" }}>
+                  Next Action: <strong>{activeApp.nextAction}</strong> &bull; Who Must Act: <strong style={{ color: "#2563eb" }}>{activeApp.whoMustAct}</strong>
+                </p>
+              </div>
+
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <span className={`status-pill pill-${(activeApp.lifecycleStage || activeApp.applicationStatus || "").toLowerCase()}`} style={{
+                  padding: "6px 12px",
+                  borderRadius: "20px",
+                  fontSize: "12px",
+                  fontWeight: 800,
+                  background: ["COLLEGE_REVIEW", "MINISTRY_SCRUTINY"].includes(activeApp.lifecycleStage || activeApp.applicationStatus) ? "#dbeafe" : ((activeApp.lifecycleStage || activeApp.applicationStatus) === "CORRECTION_REQUIRED" ? "#fef3c7" : "#dcfce7"),
+                  color: ["COLLEGE_REVIEW", "MINISTRY_SCRUTINY"].includes(activeApp.lifecycleStage || activeApp.applicationStatus) ? "#1e40af" : ((activeApp.lifecycleStage || activeApp.applicationStatus) === "CORRECTION_REQUIRED" ? "#92400e" : "#166534"),
+                  border: "1px solid currentColor"
+                }}>
+                  {(activeApp.lifecycleStage || activeApp.applicationStatus || "DRAFT").replace(/_/g, " ")}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => navigate("/student/status")}
+                  style={{
+                    background: "#02065c",
+                    color: "#ffffff",
+                    border: "none",
+                    borderRadius: "8px",
+                    padding: "8px 14px",
+                    fontSize: "12.5px",
+                    fontWeight: 700,
+                    cursor: "pointer"
+                  }}
+                >
+                  View Full Timeline →
+                </button>
+              </div>
+            </div>
+
+            {quickSyncSuccess && (
+              <div style={{ background: "#ecfdf5", border: "1px solid #6ee7b7", color: "#065f46", padding: "6px 12px", borderRadius: "6px", fontSize: "12px" }}>
+                ✅ {quickSyncSuccess}
+              </div>
+            )}
+
+            {/* Quick Lifecycle Selection Presets */}
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", paddingTop: "8px", borderTop: "1px solid #f1f5f9" }}>
+              <span style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>
+                Quick Manual Status:
+              </span>
+              <button
+                type="button"
+                disabled={quickSyncLoading}
+                onClick={() => handleDashboardQuickStatus("COLLEGE_REVIEW", "In Process (College Verification)")}
+                style={{
+                  background: "#eff6ff",
+                  color: "#1d4ed8",
+                  border: "1px solid #bfdbfe",
+                  borderRadius: "16px",
+                  padding: "4px 10px",
+                  fontSize: "11.5px",
+                  fontWeight: 700,
+                  cursor: "pointer"
+                }}
+                title="Set status to In Process"
+              >
+                🔄 In Process
+              </button>
+              <button
+                type="button"
+                disabled={quickSyncLoading}
+                onClick={() => handleDashboardQuickStatus("CORRECTION_REQUIRED", "Document Issues / Correction Required")}
+                style={{
+                  background: "#fffbeb",
+                  color: "#b45309",
+                  border: "1px solid #fde68a",
+                  borderRadius: "16px",
+                  padding: "4px 10px",
+                  fontSize: "11.5px",
+                  fontWeight: 700,
+                  cursor: "pointer"
+                }}
+                title="Set status to Document Issues"
+              >
+                ⚠️ Document Issues
+              </button>
+              <button
+                type="button"
+                disabled={quickSyncLoading}
+                onClick={() => handleDashboardQuickStatus("MINISTRY_SCRUTINY", "In Process (Ministry Scrutiny)")}
+                style={{
+                  background: "#f5f3ff",
+                  color: "#6d28d9",
+                  border: "1px solid #ddd6fe",
+                  borderRadius: "16px",
+                  padding: "4px 10px",
+                  fontSize: "11.5px",
+                  fontWeight: 700,
+                  cursor: "pointer"
+                }}
+                title="Set status to Ministry Scrutiny"
+              >
+                🏢 Ministry Scrutiny
+              </button>
+              <button
+                type="button"
+                disabled={quickSyncLoading}
+                onClick={() => handleDashboardQuickStatus("SANCTIONED", "Process / Approved (Sanctioned)")}
+                style={{
+                  background: "#f0fdf4",
+                  color: "#15803d",
+                  border: "1px solid #bbf7d0",
+                  borderRadius: "16px",
+                  padding: "4px 10px",
+                  fontSize: "11.5px",
+                  fontWeight: 700,
+                  cursor: "pointer"
+                }}
+                title="Set status to Process / Sanctioned"
+              >
+                📜 Process (Sanctioned)
+              </button>
+              <button
+                type="button"
+                disabled={quickSyncLoading}
+                onClick={() => handleDashboardQuickStatus("COMPLETED", "Process / Completed")}
+                style={{
+                  background: "#f8fafc",
+                  color: "#0f172a",
+                  border: "1px solid #cbd5e1",
+                  borderRadius: "16px",
+                  padding: "4px 10px",
+                  fontSize: "11.5px",
+                  fontWeight: 700,
+                  cursor: "pointer"
+                }}
+                title="Set status to Process / Completed"
+              >
+                🎓 Process (Completed)
+              </button>
+              <span style={{ marginLeft: "auto", fontSize: "11px", color: "#166534", fontWeight: 700 }}>
+                🟢 Auto-Sync Active
+              </span>
+            </div>
           </div>
         )}
 

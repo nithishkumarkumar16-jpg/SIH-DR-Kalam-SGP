@@ -23,6 +23,14 @@ const SanctionSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+const TicketReplySchema = new mongoose.Schema({
+  replyId: { type: String },
+  sender: { type: String, required: true },
+  senderRole: { type: String, required: true },
+  message: { type: String, required: true },
+  timestamp: { type: Date, default: Date.now },
+});
+
 const TicketSchema = new mongoose.Schema({
   ticketId: { type: String, required: true, unique: true, index: true },
   applicationId: { type: String, index: true },
@@ -30,6 +38,11 @@ const TicketSchema = new mongoose.Schema({
   category: { type: String, required: true },
   subject: { type: String, required: true },
   message: { type: String, required: true },
+  requestType: { type: String, enum: ["SUPPORT_TICKET", "STATUS_UPDATE_REQUEST"], default: "SUPPORT_TICKET" },
+  issueType: { type: String },
+  officialStatusAtSubmission: { type: String },
+  replies: [TicketReplySchema],
+  adminNote: { type: String },
   assignedTo: { type: String },
   ticketOwner: { type: String }, // support staff or reviewer owner
   deadline: { type: Date },
@@ -38,11 +51,20 @@ const TicketSchema = new mongoose.Schema({
   repliedBy: { type: String },
   status: {
     type: String,
-    enum: ["OPEN", "REVIEWING", "WAITING_FOR_STUDENT", "WAITING_FOR_AUTHORITY", "RESOLVED"],
+    enum: [
+      "OPEN",
+      "IN_PROGRESS",
+      "REVIEWING",
+      "WAITING_FOR_STUDENT",
+      "WAITING_FOR_AUTHORITY",
+      "RESOLVED",
+      "CLOSED"
+    ],
     default: "OPEN",
     index: true,
   },
   resolution: { type: String },
+  closedAt: { type: Date },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

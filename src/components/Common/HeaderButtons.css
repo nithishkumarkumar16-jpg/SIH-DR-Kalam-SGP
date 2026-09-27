@@ -1,0 +1,267 @@
+/* ==========================================================================
+   SGP STANDARDIZED DASHBOARD HEADER ACTIONS & BUTTONS DESIGN SYSTEM
+   Standardizes height (36px), padding, border-radius (8px), font-size (13px),
+   and vertical centering across Student, College, and Ministry Dashboards.
+   ========================================================================== */
+
+/* Base Standardized Header Action Button */
+.sgp-header-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  padding: 0 14px !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  font-family: inherit !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+  box-sizing: border-box !important;
+  cursor: pointer !important;
+  vertical-align: middle !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  flex-shrink: 0 !important;
+  border: 1px solid transparent !important;
+}
+
+.sgp-header-btn:disabled {
+  opacity: 0.65 !important;
+  cursor: not-allowed !important;
+}
+
+/* Secondary / Navigation Button (e.g. "Main Dashboard") */
+.sgp-header-btn-secondary {
+  background: #334155 !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12) !important;
+}
+
+.sgp-header-btn-secondary:hover:not(:disabled) {
+  background: #475569 !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Danger Button (e.g. "Sign Out") */
+.sgp-header-btn-danger {
+  background: #dc2626 !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 1px 4px rgba(220, 38, 38, 0.25) !important;
+}
+
+.sgp-header-btn-danger:hover:not(:disabled) {
+  background: #b91c1c !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35) !important;
+}
+
+/* Success Button (e.g. "Export Excel") */
+.sgp-header-btn-success {
+  background: #059669 !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 1px 4px rgba(5, 150, 105, 0.25) !important;
+}
+
+.sgp-header-btn-success:hover:not(:disabled) {
+  background: #047857 !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.35) !important;
+}
+
+/* Primary Button (e.g. "College Portal") */
+.sgp-header-btn-primary {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 1px 4px rgba(37, 99, 235, 0.25) !important;
+}
+
+.sgp-header-btn-primary:hover:not(:disabled) {
+  background: #1d4ed8 !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35) !important;
+}
+
+/* Ministry Button (e.g. "Ministry Portal") */
+.sgp-header-btn-ministry {
+  background: #7c3aed !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 1px 4px rgba(124, 58, 237, 0.25) !important;
+}
+
+.sgp-header-btn-ministry:hover:not(:disabled) {
+  background: #6d28d9 !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35) !important;
+}
+
+/* Ghost / Translucent Button (e.g. Profile, Application Status, Help, Utility links) */
+.sgp-header-btn-ghost {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08) !important;
+}
+
+.sgp-header-btn-ghost:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.22) !important;
+  border-color: rgba(255, 255, 255, 0.45) !important;
+  color: #f5b301 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18) !important;
+}
+
+/* Standardize Language Trigger */
+.lang-selector .lang-trigger {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  padding: 0 14px !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  box-sizing: border-box !important;
+  line-height: 1 !important;
+}
+
+/* Standardize Header Actions Containers across dashboards */
+.college-header .header-actions,
+.ministry-header .header-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
+}
+
+/* Standardize User info pills */
+.college-header .user-pill,
+.ministry-header .user-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  padding: 0 14px !important;
+  border-radius: 8px !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+}
+
+/* Ensure icons and text inside standardized buttons are vertically aligned */
+.sgp-header-btn span,
+.sgp-header-btn svg,
+.lang-trigger span {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+/* Responsive adjustment for small mobile screens (320px - 414px) */
+@media (max-width: 640px) {
+  .college-header .header-actions,
+  .ministry-header .header-actions {
+    gap: 6px !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    margin-top: 8px !important;
+  }
+
+  .sgp-header-btn,
+  .lang-selector .lang-trigger,
+  .college-header .user-pill,
+  .ministry-header .user-badge {
+    height: 34px !important;
+    min-height: 34px !important;
+    padding: 0 10px !important;
+    font-size: 12px !important;
+  }
+}
+
+/* ==========================================================================
+   STUDENT SERVICES DROPDOWN MENU
+   ========================================================================== */
+.student-menu-dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.student-services-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 250px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 14px 30px -4px rgba(0, 0, 0, 0.25), 0 8px 12px -4px rgba(0, 0, 0, 0.12);
+  border: 1px solid #e2e8f0;
+  z-index: 1100;
+  padding: 6px;
+  animation: modalFadeIn 0.15s ease-out;
+}
+
+.student-dropdown-option {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  padding: 10px 14px !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 8px !important;
+  text-align: left !important;
+  cursor: pointer !important;
+  transition: background 0.15s ease !important;
+  box-sizing: border-box !important;
+  text-decoration: none !important;
+}
+
+.student-dropdown-option:hover {
+  background: #f1f5f9 !important;
+}
+
+.student-dropdown-option .opt-icon {
+  font-size: 20px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.student-dropdown-option .opt-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.student-dropdown-option .opt-content strong {
+  font-size: 13.5px;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.student-dropdown-option .opt-content span {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 1px;
+}

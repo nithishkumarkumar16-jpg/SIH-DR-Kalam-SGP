@@ -63,13 +63,18 @@ describe("Student Dashboard Header UI & Accessibility Suite", () => {
       </BrowserRouter>
     );
 
-    // Should find "Application Status" button
-    const statusBtn = screen.getByRole("button", { name: /view application status/i });
+    // Open Student Services menu
+    const menuBtn = screen.getByRole("button", { name: /student services menu/i });
+    expect(menuBtn).toBeInTheDocument();
+    fireEvent.click(menuBtn);
+
+    // Should find "Application Status" option
+    const statusBtn = screen.getByRole("menuitem", { name: /view application status/i });
     expect(statusBtn).toBeInTheDocument();
     expect(statusBtn).toHaveTextContent(/Application Status/i);
 
     // Should NOT have a bare "Status" button that doesn't mention "Application Status"
-    const exactStatus = screen.queryByRole("button", { name: /^status$/i });
+    const exactStatus = screen.queryByRole("menuitem", { name: /^status$/i });
     expect(exactStatus).not.toBeInTheDocument();
   });
 
@@ -80,7 +85,11 @@ describe("Student Dashboard Header UI & Accessibility Suite", () => {
       </BrowserRouter>
     );
 
-    const profileBtn = screen.getByRole("button", { name: /view student profile/i });
+    const menuBtn = screen.getByRole("button", { name: /student services menu/i });
+    expect(menuBtn).toBeInTheDocument();
+    fireEvent.click(menuBtn);
+
+    const profileBtn = screen.getByRole("menuitem", { name: /view student profile/i });
     expect(profileBtn).toBeInTheDocument();
     expect(profileBtn).toHaveTextContent(/Profile/i);
   });
@@ -117,7 +126,7 @@ describe("Student Dashboard Header UI & Accessibility Suite", () => {
     expect(drawer).toBeInTheDocument();
 
     // Verify student navigation items exist inside mobile drawer
-    expect(screen.getAllByText(/application status/i).length).toBeGreaterThanOrEqual(2);
+    expect(drawer).toHaveTextContent(/application status/i);
 
     // Press Escape key to close mobile drawer
     fireEvent.keyDown(document, { key: "Escape", code: "Escape" });

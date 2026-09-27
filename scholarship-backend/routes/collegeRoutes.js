@@ -482,6 +482,147 @@ router.post("/applications/:id/forward", async (req, res) => {
   }
 });
 
+// POST /api/college/applications/:id/lifecycle-status (Manual Lifecycle Status Update)
+router.post("/applications/:id/lifecycle-status", async (req, res) => {
+  try {
+    const { lifecycleStage, stageLabel, note, nextAction, whoMustAct, lastUpdatedAt } = req.body;
+    const VALID_LIFECYCLE_STAGES = [
+      "DRAFT",
+      "DOCUMENT_VERIFICATION",
+      "ELIGIBILITY_CONFIRMED",
+      "COLLEGE_REVIEW",
+      "CORRECTION_REQUIRED",
+      "MINISTRY_SCRUTINY",
+      "SELECTION",
+      "SANCTIONED",
+      "PAID",
+      "COMPLETED",
+    ];
+
+    const STAGE_LABELS = {
+      DRAFT: "Application Created",
+      DOCUMENT_VERIFICATION: "Documents Uploaded & OCR",
+      ELIGIBILITY_CONFIRMED: "Eligibility Pre-Check",
+      COLLEGE_REVIEW: "College Verification",
+      CORRECTION_REQUIRED: "Correction / Resubmission",
+      MINISTRY_SCRUTINY: "Ministry Scrutiny",
+      SELECTION: "Selection Committee",
+      SANCTIONED: "Award & Sanction",
+      PAID: "DBT Payment Credit",
+      COMPLETED: "Renewal / Completion",
+    };
+
+    const DEFAULT_WHO_MUST_ACT = {
+      DRAFT: "Student",
+      DOCUMENT_VERIFICATION: "Student / College Verifier",
+      ELIGIBILITY_CONFIRMED: "Eligibility Verification Cell",
+      COLLEGE_REVIEW: "College Verification Officer",
+      CORRECTION_REQUIRED: "Student (Correction Required)",
+      MINISTRY_SCRUTINY: "Ministry Scrutiny Committee",
+      SELECTION: "Selection Committee",
+      SANCTIONED: "Sanctioning Authority",
+      PAID: "PFMS / Bank DBT Cell",
+      COMPLETED: "Student / Institution",
+    };
+
+    const DEFAULT_NEXT_ACTION = {
+      DRAFT: "Complete document upload and submit application",
+      DOCUMENT_VERIFICATION: "Verify OCR certificate extractions and bonafide credentials",
+      ELIGIBILITY_CONFIRMED: "Proceed to institutional college-level verification",
+      COLLEGE_REVIEW: "College committee visual certificate check and bonafide sign-off",
+      CORRECTION_REQUIRED: "Student must re-upload flagged document and resubmit",
+      MINISTRY_SCRUTINY: "State/Ministry scrutiny officer verifies institutional recommendation",
+      SELECTION: "Selection committee evaluates merit ranking and quota",
+      SANCTIONED: "Generate formal award letter and sanction order",
+      PAID: "Direct Benefit Transfer credit via NPCI Aadhaar-seeded bank account",
+      COMPLETED: "Application cycle completed. Track renewal period.",
+    };
+
+    if (!lifecycleStage || !VALID_LIFECYCLE_STAGES.includes(lifecycleStage)) {
+      return res.status(400).json({
+        error: `Invalid lifecycle stage. Must be one of: ${VALID_LIFECYCLE_STAGES.join(", ")}`,
+      });
+    }
+
+    const app = await Application.findOne({ applicationId: req.params.id });
+    if (!app) {
+      return res.status(404).json({ error: "Application not found." });
+    }
+
+    if (app.collegeId !== req.user.collegeId) {
+      return res.status(403).json({ error: "Forbidden: Cannot update lifecycle status for another institution's student." });
+    }
+
+    const prevStatus = app.lifecycleStage || app.applicationStatus;
+    const resolvedLabel = (stageLabel && stageLabel.trim()) || STAGE_LABELS[lifecycleStage] || lifecycleStage;
+    const resolvedWho = (whoMustAct && whoMustAct.trim()) || DEFAULT_WHO_MUST_ACT[lifecycleStage] || app.whoMustAct;
+    const resolvedNext = (nextAction && nextAction.trim()) || DEFAULT_NEXT_ACTION[lifecycleStage] || app.nextAction;
+    const updateTime = lastUpdatedAt ? new Date(lastUpdatedAt) : new Date();
+
+    app.lifecycleStage = lifecycleStage;
+    app.currentStage = resolvedLabel;
+    app.whoMustAct = resolvedWho;
+    app.nextAction = resolvedNext;
+    app.lifecycleNote = (note && note.trim()) || "";
+    app.lifecycleLastUpdated = updateTime;
+    app.lifecycleUpdatedBy = req.user.userId;
+    app.lifecycleUpdatedByRole = req.user.role;
+    app.applicationStatus = lifecycleStage;
+    app.lastUpdatedAt = updateTime;
+    await app.save();
+
+    await StatusHistory.create({
+      historyId: `HIS-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      applicationId: app.applicationId,
+      previousStatus: prevStatus,
+      newStatus: lifecycleStage,
+      changedBy: req.user.userId,
+      changedByRole: req.user.role,
+      reason: (note && note.trim()) || `Manual lifecycle status update to ${resolvedLabel}`,
+      source: "COLLEGE_MANUAL_ADMIN",
+      timestamp: updateTime,
+    });
+
+    const student = await Student.findOne({ studentId: app.studentId }).lean();
+    if (student) {
+      await Notification.create({
+        notificationId: `NOTIF-${Date.now()}`,
+        userId: student.userId,
+        role: "STUDENT",
+        title: `Lifecycle Status Updated: ${resolvedLabel}`,
+        message: `Your application lifecycle status has been updated to "${resolvedLabel}". Responsible Authority: ${resolvedWho}. Next Action: ${resolvedNext}`,
+        type: lifecycleStage === "CORRECTION_REQUIRED" ? "DEFICIENCY" : "INFO",
+        link: "/student/status",
+      });
+    }
+
+    await recordAuditLog({
+      actorUserId: req.user.userId,
+      actorRole: req.user.role,
+      action: "LIFECYCLE_STATUS_UPDATED",
+      entityType: "Application",
+      entityId: app.applicationId,
+      oldValue: { status: prevStatus },
+      newValue: {
+        lifecycleStage,
+        currentStage: resolvedLabel,
+        whoMustAct: resolvedWho,
+        nextAction: resolvedNext,
+        note: (note && note.trim()) || "",
+      },
+      reason: (note && note.trim()) || "College Admin manual lifecycle progression",
+      req,
+    });
+
+    res.json({
+      message: "Application lifecycle status updated successfully",
+      application: app,
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to update lifecycle status: " + err.message });
+  }
+});
+
 // POST /api/college/students/create (Admin creates/invites student with activation token)
 router.post("/students/create", async (req, res) => {
   try {
@@ -1130,12 +1271,12 @@ router.get("/tickets", async (req, res) => {
   }
 });
 
-// POST /api/college/tickets/:id/reply (Reply to support ticket)
+// POST /api/college/tickets/:id/reply (Reply to support ticket / update status)
 router.post("/tickets/:id/reply", async (req, res) => {
   try {
-    const { reply, status, deadline } = req.body;
-    if (!reply || !reply.trim()) {
-      return res.status(400).json({ error: "Reply text is required." });
+    const { reply, status, adminNote, assignedTo, deadline } = req.body;
+    if ((!reply || !reply.trim()) && !status && !adminNote) {
+      return res.status(400).json({ error: "Reply text, status change, or admin note is required." });
     }
 
     const ticket = await Ticket.findOne({ ticketId: req.params.id });
@@ -1149,28 +1290,51 @@ router.post("/tickets/:id/reply", async (req, res) => {
       return res.status(403).json({ error: "Unauthorized access to this ticket." });
     }
 
-    ticket.latestReply = reply.trim();
-    ticket.latestReplyAt = new Date();
-    ticket.repliedBy = `${req.user.role} (${req.user.userId})`;
-    ticket.ticketOwner = req.user.userId;
-    if (status) ticket.status = status;
+    if (!Array.isArray(ticket.replies)) {
+      ticket.replies = [];
+    }
+
+    if (reply && reply.trim()) {
+      ticket.replies.push({
+        replyId: `REP-${Date.now()}-${Math.floor(10 + Math.random() * 90)}`,
+        sender: `${req.user.role === "COLLEGE_ADMIN" ? "College Admin" : "College Staff"} (${req.user.userId})`,
+        senderRole: req.user.role,
+        message: reply.trim(),
+        timestamp: new Date(),
+      });
+      ticket.latestReply = reply.trim();
+      ticket.latestReplyAt = new Date();
+      ticket.repliedBy = `${req.user.role} (${req.user.userId})`;
+    }
+
+    if (status) {
+      ticket.status = status;
+      if (status === "RESOLVED" || status === "CLOSED") {
+        ticket.closedAt = new Date();
+      }
+    }
+    if (adminNote !== undefined) ticket.adminNote = adminNote.trim();
+    if (assignedTo !== undefined) ticket.assignedTo = assignedTo.trim();
     if (deadline) ticket.deadline = new Date(deadline);
+    ticket.ticketOwner = req.user.userId;
     ticket.updatedAt = new Date();
     await ticket.save();
 
-    await Notification.create({
-      notificationId: `NOTIF-${Date.now()}`,
-      userId: student.userId,
-      role: "STUDENT",
-      title: "Support Ticket Update",
-      message: `Your college staff replied: "${reply.trim().substring(0, 100)}..."`,
-      type: "INFO",
-      link: "/student/tickets",
-    });
+    if (reply && reply.trim()) {
+      await Notification.create({
+        notificationId: `NOTIF-${Date.now()}`,
+        userId: student.userId,
+        role: "STUDENT",
+        title: "Support Ticket Update",
+        message: `Your college staff replied: "${reply.trim().substring(0, 100)}..."`,
+        type: "INFO",
+        link: "/student/tickets",
+      });
+    }
 
-    res.json({ message: "Ticket reply saved", ticket });
+    res.json({ message: "Ticket updated successfully", ticket });
   } catch (err) {
-    res.status(500).json({ error: "Failed to reply to ticket: " + err.message });
+    res.status(500).json({ error: "Failed to update ticket: " + err.message });
   }
 });
 

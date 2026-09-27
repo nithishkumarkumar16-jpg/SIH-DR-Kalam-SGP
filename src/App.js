@@ -12,6 +12,7 @@ import StudentProfile from "./components/Student/StudentProfile";
 import StudentApplication from "./components/Student/StudentApplication";
 import ApplicationStatusTimeline from "./components/Student/ApplicationStatusTimeline";
 import DeficiencyManager from "./components/Student/DeficiencyManager";
+import StudentTickets from "./components/Student/StudentTickets";
 import CollegeDashboard from "./components/College/CollegeDashboard";
 import MinistryDashboard from "./components/Ministry/MinistryDashboard";
 
@@ -25,6 +26,7 @@ import RenewalAlert from "./components/RenewalAlert/RenewalAlert";
 import Reports from "./components/Reports/Reports";
 import ScholarshipChat from "./components/ScholarshipChat/ScholarshipChat";
 import NSPReadiness from "./components/NSPReadiness/NSPReadiness";
+import "./components/Common/HeaderButtons.css";
 import "./App.css";
 
 function App() {
@@ -79,6 +81,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["STUDENT"]}>
                 <DeficiencyManager />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student/tickets"
+            element={
+              <ProtectedRoute allowedRoles={["STUDENT"]}>
+                <StudentTickets />
               </ProtectedRoute>
             }
           />

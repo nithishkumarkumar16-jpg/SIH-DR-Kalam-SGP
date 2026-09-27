@@ -24,7 +24,18 @@ router.use(verifyStudentOwnership);
 
 // GET /api/student/profile
 router.get("/profile", async (req, res) => {
-  res.json({ student: req.student });
+  try {
+    const studentObj = req.student
+      ? (typeof req.student.toObject === "function" ? req.student.toObject() : { ...req.student })
+      : {};
+    if (req.user) {
+      studentObj.email = req.user.email;
+      studentObj.mobile = req.user.mobile || studentObj.mobile || "";
+    }
+    res.json({ student: studentObj });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to retrieve student profile: " + err.message });
+  }
 });
 
 // PUT /api/student/profile
@@ -559,6 +570,203 @@ router.post("/applications/:id/progress-report", async (req, res) => {
   }
 });
 
+// POST /api/student/applications/:id/lifecycle-status (Student Manual Selection Change with Automated Admin Sync)
+router.post("/applications/:id/lifecycle-status", async (req, res) => {
+  try {
+    const { lifecycleStage, stageLabel, note, nextAction, whoMustAct } = req.body;
+
+    const VALID_LIFECYCLE_STAGES = [
+      "DRAFT",
+      "DOCUMENT_VERIFICATION",
+      "ELIGIBILITY_CONFIRMED",
+      "COLLEGE_REVIEW",
+      "CORRECTION_REQUIRED",
+      "MINISTRY_SCRUTINY",
+      "SELECTION",
+      "SANCTIONED",
+      "PAID",
+      "COMPLETED",
+    ];
+
+    // Normalize friendly aliases (e.g. IN_PROCESS -> COLLEGE_REVIEW, DOCUMENT_ISSUES -> CORRECTION_REQUIRED, PROCESS -> COMPLETED)
+    let normalized = lifecycleStage;
+    if (lifecycleStage === "IN_PROCESS" || lifecycleStage === "IN_PROGRESS") {
+      normalized = "COLLEGE_REVIEW";
+    } else if (lifecycleStage === "DOCUMENT_ISSUES" || lifecycleStage === "DOCUMENT_ISSUE" || lifecycleStage === "CORRECTION") {
+      normalized = "CORRECTION_REQUIRED";
+    } else if (lifecycleStage === "PROCESS" || lifecycleStage === "PROCESSED") {
+      normalized = "SANCTIONED";
+    }
+
+    if (!normalized || !VALID_LIFECYCLE_STAGES.includes(normalized)) {
+      return res.status(400).json({
+        error: `Invalid lifecycle stage. Must be one of: ${VALID_LIFECYCLE_STAGES.join(", ")} or aliases (IN_PROCESS, DOCUMENT_ISSUES, PROCESS)`,
+      });
+    }
+
+    const STAGE_LABELS = {
+      DRAFT: "Application Created",
+      DOCUMENT_VERIFICATION: "Documents Uploaded & OCR",
+      ELIGIBILITY_CONFIRMED: "Eligibility Pre-Check",
+      COLLEGE_REVIEW: "College Verification (In Process)",
+      CORRECTION_REQUIRED: "Document Issues / Correction Required",
+      MINISTRY_SCRUTINY: "Ministry Scrutiny (In Process)",
+      SELECTION: "Selection Committee Evaluation",
+      SANCTIONED: "Award & Sanction (Processed)",
+      PAID: "DBT Payment Credit (Processed)",
+      COMPLETED: "Renewal / Completion (Processed)",
+    };
+
+    const DEFAULT_WHO_MUST_ACT = {
+      DRAFT: "Student",
+      DOCUMENT_VERIFICATION: "Student / College Verifier",
+      ELIGIBILITY_CONFIRMED: "Eligibility Verification Cell",
+      COLLEGE_REVIEW: "College Verification Officer",
+      CORRECTION_REQUIRED: "Student (Resolve Document Issues)",
+      MINISTRY_SCRUTINY: "Ministry Scrutiny Committee",
+      SELECTION: "Selection Committee",
+      SANCTIONED: "Sanctioning Authority",
+      PAID: "PFMS / Bank DBT Cell",
+      COMPLETED: "Student / Institution",
+    };
+
+    const DEFAULT_NEXT_ACTION = {
+      DRAFT: "Complete document upload and submit application",
+      DOCUMENT_VERIFICATION: "Verify OCR certificate extractions and bonafide credentials",
+      ELIGIBILITY_CONFIRMED: "Proceed to institutional college-level verification",
+      COLLEGE_REVIEW: "College committee visual certificate check and bonafide sign-off",
+      CORRECTION_REQUIRED: "Student must re-upload flagged document and resubmit",
+      MINISTRY_SCRUTINY: "State/Ministry scrutiny officer verifies institutional recommendation",
+      SELECTION: "Selection committee evaluates merit ranking and quota",
+      SANCTIONED: "Generate formal award letter and sanction order",
+      PAID: "Direct Benefit Transfer credit via NPCI Aadhaar-seeded bank account",
+      COMPLETED: "Application cycle completed. Track renewal period.",
+    };
+
+    const app = await Application.findOne({
+      applicationId: req.params.id,
+      studentId: req.student.studentId,
+    });
+
+    if (!app) {
+      return res.status(404).json({ error: "Application not found or unauthorized." });
+    }
+
+    const prevStatus = app.lifecycleStage || app.applicationStatus;
+    const resolvedLabel = (stageLabel && stageLabel.trim()) || STAGE_LABELS[normalized] || normalized;
+    const resolvedWho = (whoMustAct && whoMustAct.trim()) || DEFAULT_WHO_MUST_ACT[normalized] || app.whoMustAct;
+    const resolvedNext = (nextAction && nextAction.trim()) || DEFAULT_NEXT_ACTION[normalized] || app.nextAction;
+    const now = new Date();
+
+    app.lifecycleStage = normalized;
+    app.applicationStatus = normalized;
+    app.currentStage = resolvedLabel;
+    app.whoMustAct = resolvedWho;
+    app.nextAction = resolvedNext;
+    app.lifecycleNote = (note && note.trim()) || `Manual student selection: ${resolvedLabel}`;
+    app.lifecycleLastUpdated = now;
+    app.lifecycleUpdatedBy = req.user.userId;
+    app.lifecycleUpdatedByRole = "STUDENT";
+    app.lastUpdatedAt = now;
+
+    // If Document Issues / Correction Required, ensure open deficiency is flagged
+    if (normalized === "CORRECTION_REQUIRED") {
+      const existingDef = await Deficiency.findOne({ applicationId: app.applicationId, status: "OPEN" });
+      if (!existingDef) {
+        await Deficiency.create({
+          deficiencyId: `DEF-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`,
+          applicationId: app.applicationId,
+          studentId: req.student.studentId,
+          type: "DATA_MISMATCH",
+          documentType: "marksheet",
+          severity: "HIGH",
+          description: (note && note.trim()) || "Document issues flagged: discrepancy in uploaded certificate or credentials requiring student re-submission.",
+          status: "OPEN",
+          createdBy: req.user.userId,
+          createdByRole: "STUDENT",
+          assignedTo: req.student.studentId,
+        });
+      }
+      app.openDeficienciesCount = 1;
+    }
+
+    await app.save();
+
+    // 1. Audit status history
+    await StatusHistory.create({
+      historyId: `HIS-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      applicationId: app.applicationId,
+      previousStatus: prevStatus,
+      newStatus: normalized,
+      changedBy: req.user.userId,
+      changedByRole: "STUDENT",
+      reason: (note && note.trim()) || `Manual status selection to ${resolvedLabel} (Automated Admin Portal Sync)`,
+      source: "STUDENT_MANUAL_SELECTION",
+      timestamp: now,
+    });
+
+    // 2. Automated sync ticket in Ticket collection so it immediately appears in Admin Portal (College & Ministry Support Tickets)
+    try {
+      const count = await Ticket.countDocuments({ requestType: "STATUS_UPDATE_REQUEST" });
+      const ticketId = `SGP-STATUS-${String(count + 1).padStart(4, "0")}`;
+      await Ticket.create({
+        ticketId,
+        applicationId: app.applicationId,
+        studentId: req.student.studentId,
+        category: "Application Status",
+        subject: `Manual Lifecycle Update: ${resolvedLabel} (${app.applicationId})`,
+        message: (note && note.trim()) || `Student selected lifecycle status: ${resolvedLabel}. Synced automatically to Admin Portal.`,
+        requestType: "STATUS_UPDATE_REQUEST",
+        issueType: normalized === "CORRECTION_REQUIRED" ? "Document Issues" : (["COLLEGE_REVIEW", "MINISTRY_SCRUTINY"].includes(normalized) ? "In Process" : "Process / Completed"),
+        officialStatusAtSubmission: normalized,
+        status: "OPEN",
+        replies: [
+          {
+            replyId: `REP-${Date.now()}-1`,
+            sender: req.student.fullName || "Student",
+            senderRole: "STUDENT",
+            message: (note && note.trim()) || `Automated status update: ${resolvedLabel}`,
+            timestamp: now,
+          },
+        ],
+        deadline: new Date(Date.now() + 7 * 86400000),
+      });
+    } catch (tktErr) {
+      console.warn("Could not create ticket for manual status update:", tktErr.message);
+    }
+
+    // 3. System Notification for College and Student
+    await Notification.create({
+      notificationId: `NOTIF-${Date.now()}`,
+      userId: req.user.userId,
+      role: "STUDENT",
+      title: "Lifecycle Status Updated",
+      message: `Your application ${app.applicationId} status has been updated to "${resolvedLabel}" and automatically synced with your College Admin Portal.`,
+      type: "INFO",
+      link: "/student/status",
+    });
+
+    await recordAuditLog({
+      actorUserId: req.user.userId,
+      actorRole: "STUDENT",
+      action: "STUDENT_MANUAL_LIFECYCLE_UPDATE",
+      entityType: "Application",
+      entityId: app.applicationId,
+      oldValue: { status: prevStatus },
+      newValue: { status: normalized, currentStage: resolvedLabel },
+      reason: "Student manual selection with automated admin sync",
+      req,
+    });
+
+    res.json({
+      message: `Lifecycle status successfully updated to "${resolvedLabel}" and synced with Admin Portal.`,
+      application: app,
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to update lifecycle status: " + err.message });
+  }
+});
+
 // GET /api/student/tickets (List own tickets)
 router.get("/tickets", async (req, res) => {
   try {
@@ -569,38 +777,70 @@ router.get("/tickets", async (req, res) => {
   }
 });
 
+// GET /api/student/tickets/:id (Get single ticket details)
+router.get("/tickets/:id", async (req, res) => {
+  try {
+    const ticket = await Ticket.findOne({ ticketId: req.params.id, studentId: req.student.studentId }).lean();
+    if (!ticket) return res.status(404).json({ error: "Ticket not found." });
+    res.json({ ticket });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to load ticket: " + err.message });
+  }
+});
+
 // POST /api/student/tickets (Create a support ticket)
 router.post("/tickets", async (req, res) => {
   try {
-    const { category, subject, message, applicationId } = req.body;
+    const { category, subject, message, applicationId, requestType, issueType, officialStatusAtSubmission } = req.body;
     if (!subject || !message) {
       return res.status(400).json({ error: "Subject and message are required." });
     }
 
-    const ticketId = `TCK-${Date.now().toString().slice(-6)}-${Math.random().toString(36).substring(2, 5)}`;
+    const isStatusRequest = requestType === "STATUS_UPDATE_REQUEST";
+    const prefix = isStatusRequest ? "SGP-STATUS" : "SGP-TKT";
+
+    const count = await Ticket.countDocuments(isStatusRequest ? { requestType: "STATUS_UPDATE_REQUEST" } : { requestType: { $ne: "STATUS_UPDATE_REQUEST" } });
+    let ticketId = `${prefix}-${String(count + 1).padStart(4, "0")}`;
+    const exists = await Ticket.findOne({ ticketId });
+    if (exists) {
+      ticketId = `${prefix}-${Date.now().toString().slice(-4)}${Math.floor(100 + Math.random() * 900)}`;
+    }
+
     const ticket = await Ticket.create({
       ticketId,
       applicationId: applicationId || null,
       studentId: req.student.studentId,
-      category: category || "GENERAL_QUERY",
+      category: isStatusRequest ? (category || "Application Status") : (category || "Scholarship Query"),
       subject: subject.trim(),
       message: message.trim(),
+      requestType: isStatusRequest ? "STATUS_UPDATE_REQUEST" : "SUPPORT_TICKET",
+      issueType: issueType || null,
+      officialStatusAtSubmission: officialStatusAtSubmission || null,
       status: "OPEN",
+      replies: [
+        {
+          replyId: `REP-${Date.now()}-1`,
+          sender: req.student.fullName || "Student",
+          senderRole: "STUDENT",
+          message: message.trim(),
+          timestamp: new Date(),
+        },
+      ],
       deadline: new Date(Date.now() + 7 * 86400000), // 7 days resolution target
     });
 
     await recordAuditLog({
       actorUserId: req.user.userId,
       actorRole: "STUDENT",
-      action: "TICKET_CREATED",
+      action: isStatusRequest ? "STATUS_UPDATE_REQUEST_CREATED" : "TICKET_CREATED",
       entityType: "Ticket",
       entityId: ticketId,
-      newValue: { subject, category },
-      reason: "Student created support ticket",
+      newValue: { subject, category: ticket.category, requestType: ticket.requestType, issueType: ticket.issueType },
+      reason: isStatusRequest ? "Student requested status update / reported status issue" : "Student created support ticket",
       req,
     });
 
-    res.status(201).json({ message: "Support ticket created successfully", ticket });
+    res.status(201).json({ message: isStatusRequest ? "Status update request submitted successfully" : "Ticket submitted successfully", ticket });
   } catch (err) {
     res.status(500).json({ error: "Failed to create ticket: " + err.message });
   }
@@ -617,10 +857,22 @@ router.post("/tickets/:id/reply", async (req, res) => {
     const ticket = await Ticket.findOne({ ticketId: req.params.id, studentId: req.student.studentId });
     if (!ticket) return res.status(404).json({ error: "Ticket not found." });
 
+    if (!Array.isArray(ticket.replies)) {
+      ticket.replies = [];
+    }
+
+    const replyObj = {
+      replyId: `REP-${Date.now()}-${Math.floor(10 + Math.random() * 90)}`,
+      sender: req.student.fullName || "Student",
+      senderRole: "STUDENT",
+      message: reply.trim(),
+      timestamp: new Date(),
+    };
+    ticket.replies.push(replyObj);
     ticket.latestReply = reply.trim();
     ticket.latestReplyAt = new Date();
     ticket.repliedBy = `Student (${req.student.fullName})`;
-    ticket.status = "REVIEWING";
+    ticket.status = "WAITING_FOR_AUTHORITY";
     ticket.updatedAt = new Date();
     await ticket.save();
 
